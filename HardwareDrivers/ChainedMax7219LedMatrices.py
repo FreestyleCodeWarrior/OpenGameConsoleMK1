@@ -1,6 +1,6 @@
-# Construct and Test hardware driver of daisy chained LED matrices with max7219
-# MicroPython v1.19.1 on 2022-06-18
-# Espressif ESP32-WROOM-32
+# Hardware driver of daisy chained LED matrices with max7219
+# MicroPython version: v1.19.1 on 2022-06-18
+# Test device: Espressif ESP32-WROOM-32
 
 from micropython import const
 
@@ -20,7 +20,7 @@ SCANLIMIT = const(0xB)
 SHUTDOWN = const(0xC)
 DISPLAYTEST = const(0xF)
 
-class Max7219LEDMatrix:
+class ChainedMax7219Matrices:
     def __init__(self, spi, cs, num):
         # spi (machine.SPI): serial phripheral interface
         # cs (machine.Pin): chip select pin
@@ -65,6 +65,7 @@ class Max7219LEDMatrix:
 
 
     def fill(self, *rows):
+        # every element in rows should in interval [0, 7]
         if not rows:
             rows = (i for i in range(8))
         for r in rows:
@@ -72,6 +73,7 @@ class Max7219LEDMatrix:
 
 
     def clear(self, *rows):
+        # every element in rows should in interval [0, 7]
         if not rows:
             rows = (i for i in range(8))
         for r in rows:
@@ -79,10 +81,9 @@ class Max7219LEDMatrix:
 
 
     def test(self, on):
-        # turn on/off display test mode
-        if on:
+        if on == 1:
             self.writeall(DISPLAYTEST, 0x1)
-        else:
+        elif on == 0:
             self.writeall(DISPLAYTEST, 0x0)
 
 
@@ -98,103 +99,3 @@ class Max7219LEDMatrix:
         elif state == 0:
             # switch off
             self.writeall(SHUTDOWN, 0x0)
-
-# ==========
-from machine import SPI
-from machine import Pin
-from time import sleep
-
-hspi = SPI(1)
-cs = Pin(33)
-
-m = Max7219LEDMatrix(hspi, cs, 2)
-
-m.fill()
-sleep(0.5)
-
-m.clear(0, 2, 4, 6)
-sleep(0.5)
-
-m.clear()
-
-m.intensity(0)
-lines = (
-    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
-    (0,1,1,0,1,1,0,0,0,1,1,0,1,1,0,0),
-    (0,1,1,0,1,1,0,0,0,1,1,0,1,1,0,0),
-    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
-    (0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0),
-    (0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0),
-    (0,1,1,1,1,1,0,0,0,1,0,0,0,1,0,0),
-    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
-for r in range(len(lines)):
-    m.writerow(r, lines[r])
-for _ in range(2):
-    for i in range(16):
-        m.intensity(i)
-        sleep(0.1)
-    for i in range(15, -1, -1):
-        m.intensity(i)
-        sleep(0.1)
-
-m.clear()
-sleep(0.5)
-
-rows = (
-    (1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0),
-    (0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1)
-    )
-for i in range(8):
-    m.writerow(i, rows[i%2])
-    sleep(0.1)
-    m.writerow(i, (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
-for i in range(8):
-    m.writerow(i, rows[i%2])
-    sleep(0.1)
-    m.writerow(i, (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
-
-m.clear()
-sleep(0.5)
-
-m.intensity(0)
-lines = (
-    (1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,0),
-    (1,1,1,0,1,0,0,0,1,0,1,0,1,0,1,0),
-    (1,0,1,0,1,1,0,0,1,0,1,0,1,1,1,0),
-    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
-    (1,0,1,0,0,0,0,0,0,0,0,1,0,1,1,0),
-    (1,0,1,0,1,1,1,0,1,1,0,1,0,1,0,1),
-    (1,1,1,0,1,0,1,0,1,0,0,1,0,1,0,1),
-    (1,1,1,0,1,1,1,0,1,0,0,1,0,1,1,0))
-for r in range(len(lines)):
-    m.writerow(r, lines[r])
-sleep(2)
-
-for _ in range(5):
-    m.switch(1)
-    sleep(0.3)
-    m.switch(0)
-    sleep(0.3)
-
-m.switch(1)
-m.clear()
-m.fill(1,3,5,7)
-sleep(0.5)
-m.clear(1,3,5,7)
-sleep(0.5)
-
-m.test(1)
-sleep(0.3)
-m.test(0)
-sleep(0.3)
-    
-
-        
-    
-    
-                
-            
-            
-            
-
-
