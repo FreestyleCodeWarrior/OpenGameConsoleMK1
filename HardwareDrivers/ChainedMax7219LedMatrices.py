@@ -40,12 +40,12 @@ class ChainedMax7219Matrices:
         self.switch(1)
         self.test(0)
         self.intensity(6)
-        self.writeall(SCANLIMIT, 0x7)
-        self.writeall(DECODEMODE, 0x0)
+        self._writeall(SCANLIMIT, 0x7)
+        self._writeall(DECODEMODE, 0x0)
         self.clear() # make sure every LED is initially turned off
 
 
-    def writeall(self, addr, data):
+    def _writeall(self, addr, data):
         # write same addr+data into register of every max7219 
         self.cs.off()
         for _ in range(self.num):
@@ -67,35 +67,35 @@ class ChainedMax7219Matrices:
     def fill(self, *rows):
         # every element in rows should in interval [0, 7]
         if not rows:
-            rows = (i for i in range(8))
+            rows = tuple(range(8))
         for r in rows:
-            self.writeall(DIGIT0+r, 0b11111111)
+            self._writeall(DIGIT0+r, 0b11111111)
 
 
     def clear(self, *rows):
         # every element in rows should in interval [0, 7]
         if not rows:
-            rows = (i for i in range(8))
+            rows = tuple(range(8))
         for r in rows:
-            self.writeall(DIGIT0+r, 0b00000000)
+            self._writeall(DIGIT0+r, 0b00000000)
 
 
     def test(self, on):
         if on == 1:
-            self.writeall(DISPLAYTEST, 0x1)
+            self._writeall(DISPLAYTEST, 0x1)
         elif on == 0:
-            self.writeall(DISPLAYTEST, 0x0)
+            self._writeall(DISPLAYTEST, 0x0)
 
 
     def intensity(self, i):
         if 0 <= i <= 15:
-            self.writeall(INTENSITY, i)
+            self._writeall(INTENSITY, i)
 
 
     def switch(self, state):
         if state == 1:
             # switch on
-            self.writeall(SHUTDOWN, 0x1)
+            self._writeall(SHUTDOWN, 0x1)
         elif state == 0:
             # switch off
-            self.writeall(SHUTDOWN, 0x0)
+            self._writeall(SHUTDOWN, 0x0)
