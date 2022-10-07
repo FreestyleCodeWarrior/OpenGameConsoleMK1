@@ -27,7 +27,7 @@ class DiscreteMax7219Matrices:
         self._init()
     
     def _init(self):
-        self.spi.init(baudrate=900000, polarity=0, phase=0, firstbit=self.spi.MSB)
+        self.spi.init(baudrate=9000000, polarity=0, phase=0, firstbit=self.spi.MSB)
         for cs_pin in self.cs_pins:
             cs_pin.init(mode=Pin.OUT, drive=Pin.DRIVE_0)
         self.switch(1)

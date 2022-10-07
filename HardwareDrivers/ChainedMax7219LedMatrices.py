@@ -35,7 +35,7 @@ class ChainedMax7219Matrices:
 
     def _init(self):
         # initialize SPI, CS and registers.
-        self.spi.init(baudrate=900000, polarity=0, phase=0, firstbit=self.spi.MSB)
+        self.spi.init(baudrate=9000000, polarity=0, phase=0, firstbit=self.spi.MSB)
         self.cs.init(mode=Pin.OUT, drive=Pin.DRIVE_0)
         self.switch(1)
         self.test(0)

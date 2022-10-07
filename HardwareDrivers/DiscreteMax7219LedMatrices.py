@@ -22,12 +22,14 @@ DISPLAYTEST = const(0xF)
 
 class DiscreteMax7219Matrices:
     def __init__(self, spi, cs_pins):
+        # spi (machine.SPI): serial phripheral interface
+        # cs_pins (tuple): elements of the tuple are instances of machine.Pin
         self.spi = spi
         self.cs_pins = cs_pins
         self._init()
     
     def _init(self):
-        self.spi.init(baudrate=900000, polarity=0, phase=0, firstbit=self.spi.MSB)
+        self.spi.init(baudrate=9000000, polarity=0, phase=0, firstbit=self.spi.MSB)
         for cs_pin in self.cs_pins:
             cs_pin.init(mode=Pin.OUT, drive=Pin.DRIVE_0)
         self.switch(1)
@@ -39,6 +41,7 @@ class DiscreteMax7219Matrices:
             self._writeall(DIGIT0+i, 0b00000000)
 
     def _writeall(self, addr, data):
+        # write same data into each max7219
         for cs_pin in self.cs_pins:
             cs_pin.off()
         self.spi.write(bytearray([addr, data]))
@@ -46,11 +49,13 @@ class DiscreteMax7219Matrices:
             cs_pin.on()
     
     def writerow(self, cs_index, row_index, data):
+        # write the data of a specific row to a specific chip
         self.cs_pins[cs_index].off()
         self.spi.write(bytearray([DIGIT0+row_index, data]))
         self.cs_pins[cs_index].on()
     
     def clear(self):
+        # turn off every LED
         for i in range(8):
             self._writeall(DIGIT0+i, 0b00000000)
     
@@ -65,6 +70,7 @@ class DiscreteMax7219Matrices:
             self._writeall(INTENSITY, i)
     
     def switch(self, state):
+        # turn on \ off the power supply to each LED
         if state == 1:
             # switch on
             self._writeall(SHUTDOWN, 0x1)
