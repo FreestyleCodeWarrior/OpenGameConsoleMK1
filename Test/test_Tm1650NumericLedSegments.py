@@ -24,14 +24,39 @@ INT = (
     const((0,0,0))
     )
 
-SETTING = const(0b01001000) # Command for display settings
+SETTING = const(0b01001000) # command for display settings
 POWERON = const(1) # power on led segments
 POWEROFF = const(0) # power off led segments
 
 # seven-segment mode: 1
 # eight_segment mode: 0
-SEGNUM = const({7:1, 8:0})
+SEGNUM = {7:1, 8:0}
 
+# mapping of single character and display content
+ENCODE = {
+    " ":0,
+    "0":63,
+    "1":6,
+    "2":91,
+    "3":79,
+    "4":102,
+    "5":109,
+    "6":125,
+    "7":7,
+    "8":127,
+    "9":111,
+    ".":128,
+    "0.":191,
+    "1.":134,
+    "2.":219,
+    "3.":207,
+    "4.":230,
+    "5.":237,
+    "6.":125,
+    "7.":135,
+    "8.":255,
+    "9.":239,
+    }
 
 class Tm1650NumericLedSegments:
     def __init__(self, si2c, init_intensity, segnum):
@@ -40,6 +65,7 @@ class Tm1650NumericLedSegments:
         self._segnum = SEGNUM[segnum]
         self._state = POWERON
         self._set()
+        self.clear()
     
     def _write(self, byte_1, byte_2):
         self.si2c.start()
@@ -50,8 +76,19 @@ class Tm1650NumericLedSegments:
         self._write(SETTING,\
         eval("0b0{}{}{}{}00{}".format(*self._intensity, self._segnum, self._state)))
     
-    def number(self, number):
-        pass
+    def digits(self, nums):
+        for i in range(4):
+            self._write(DIG[i], ENCODE[nums[i]])
+        
+    def digit(self, pos, num):
+        self._write(DIG[pos], ENCODE[num])
+    
+    def draw(self, pos, data):
+        self._write(DIG[pos], data)
+    
+    def clear(self):
+        for i in range(4):
+            self._write(DIG[i], 0)
     
     def intensity(self, i):
         self._intensity = INT[i]
@@ -67,40 +104,36 @@ from machine import Pin
 from time import sleep
 
 i2c = SoftI2C(scl=Pin(5), sda=Pin(4), freq=100000)
+t = Tm1650NumericLedSegments(i2c, 0, 8)
 
-i2c.start()
-i2c.write(bytearray([0b01001000,0b00010001]))
-i2c.stop()
+t.digits('1234')
+sleep(1)
+t.clear()
+sleep(1)
 
-i2c.start()
-i2c.write(bytearray([0b01101000, 0b00000001]))
-i2c.stop()
+t.digits('5678')
+sleep(1)
 
-i2c.start()
-i2c.write(bytearray([0b01101000, 0b00000010]))
-i2c.stop()
+t.digit(2, "5")
+sleep(1)
 
-i2c.start()
-i2c.write(bytearray([0b01101000, 0b00000100]))
-i2c.stop()
+for i in range(1,5):
+    t.draw(i-1, i)
+sleep(1)
 
-i2c.start()
-i2c.write(bytearray([0b01101000, 0b00001000]))
-i2c.stop()
+t.digits("8888")
+for i in range(8):
+    t.intensity(i)
+    sleep(0.1)
+for i in range(7,-1,-1):
+    t.intensity(i)
+    sleep(0.1)
 
-i2c.start()
-i2c.write(bytearray([0b01101000, 0b00010000]))
-i2c.stop()
+for i in range(6):
+    t.switch(i%2)
+    sleep(0.2)
+t.clear()
 
-i2c.start()
-i2c.write(bytearray([0b01101000, 0b00100000]))
-i2c.stop()
-
-i2c.start()
-i2c.write(bytearray([0b01101000, 0b01000000]))
-i2c.stop()
-
-i2c.start()
-i2c.write(bytearray([0b01101000, 0b11111111]))
-i2c.stop()
-"""
+t.digit(1,".")
+sleep(1)
+t.clear()
