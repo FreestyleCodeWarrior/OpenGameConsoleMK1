@@ -20,25 +20,38 @@ SCANLIMIT = const(0xB)
 SHUTDOWN = const(0xC)
 DISPLAYTEST = const(0xF)
 
-class DiscreteMax7219Matrices:
+class LedMatrix:
     def __init__(self, spi, cs_pins):
         # spi (machine.SPI): serial phripheral interface
         # cs_pins (tuple): elements of the tuple are instances of machine.Pin
         self.spi = spi
         self.cs_pins = cs_pins
-        self._init()
+        self.changedrow = set()
+        self._initpins()
+        self._initbuffer()
+        self._initsettings()
     
-    def _init(self):
-        self.spi.init(baudrate=9000000, polarity=0, phase=0, firstbit=self.spi.MSB)
+    def _initpins(self):
+        # prepare pins for communication between the MCU and max7219s
+        self.spi.init(baudrate=10000000, polarity=0, phase=0, firstbit=self.spi.MSB)
         for cs_pin in self.cs_pins:
             cs_pin.init(mode=Pin.OUT, drive=Pin.DRIVE_0)
-        self.switch(1)
+    
+    def _initbuffer(self):
+        # create the data structure of an empty buffer
+        self.buffer = []
+        for _ in range(8*len(self.cs_pins)):
+            self.buffer.append(list("0"*8))
+        self.buffer = tuple(self.buffer)
+        
+    def _initsettings(self):
+        # prepare chips for matrices display
         self.test(0)
         self.intensity(6)
         self._writeall(SCANLIMIT, 0x7)
         self._writeall(DECODEMODE, 0x0)
-        for i in range(8):
-            self._writeall(DIGIT0+i, 0b00000000)
+        self.clear()
+        self.switch(1)
 
     def _writeall(self, addr, data):
         # write same data into each max7219
@@ -48,24 +61,48 @@ class DiscreteMax7219Matrices:
         for cs_pin in self.cs_pins:
             cs_pin.on()
     
-    def writerow(self, cs_index, row_index, data):
-        # write the data of a specific row to a specific chip
-        self.cs_pins[cs_index].off()
-        self.spi.write(bytearray([DIGIT0+row_index, data]))
-        self.cs_pins[cs_index].on()
+    def pixels(self, i, *coords):
+        # update led information in the buffer but not display
+        for x, y in coords:
+            self.buffer[y][x] = i
+            self.changedrow.add(y)
+    
+    def refresh(self):
+        # write data of rows with updated led according to the buffer and display
+        for y in self.changedrow:
+            cs, row = divmod(y, 8)
+            self.cs_pins[cs].off()
+            self.spi.write(bytearray([row+1, eval("0b"+"".join(self.buffer[y]))]))
+            self.cs_pins[cs].on()
+        self.changedrow.clear()
+    
+    def clearbuffer(self):
+        # set the buffer to the initial state
+        self._initbuffer()
+    
+    def directrow(self, row, data):
+        # directly write led data and show
+        # the buffer is not altered
+        cs, row = divmod(row, 8)
+        self.cs_pins[cs].off()
+        self.spi.write(bytearray([row+1, data]))
+        self.cs_pins[cs].on()
     
     def clear(self):
-        # turn off every LED
+        # directly turn off every LED
+        # the buffer is not altered
         for i in range(8):
             self._writeall(DIGIT0+i, 0b00000000)
     
     def test(self, on):
+        # turn on / off the led test mode
         if on == 1:
             self._writeall(DISPLAYTEST, 0x1)
         elif on == 0:
             self._writeall(DISPLAYTEST, 0x0)
 
     def intensity(self, i):
+        # adjust the intensity within 15 levels
         if 0 <= i <= 15:
             self._writeall(INTENSITY, i)
     
