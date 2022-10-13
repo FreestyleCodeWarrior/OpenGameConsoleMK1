@@ -47,7 +47,7 @@ class LedMatrix:
     def _initsettings(self):
         # prepare chips for matrices display
         self.test(0)
-        self.intensity(6)
+        self.intensity(0)
         self._writeall(SCANLIMIT, 0x7)
         self._writeall(DECODEMODE, 0x0)
         self.clear()
@@ -61,7 +61,7 @@ class LedMatrix:
         for cs_pin in self.cs_pins:
             cs_pin.on()
     
-    def pixels(self, i, *coords):
+    def pixels(self, i, coords):
         # update led information in the buffer but not display
         for x, y in coords:
             self.buffer[y][x] = i
@@ -102,7 +102,7 @@ class LedMatrix:
             self._writeall(DISPLAYTEST, 0x0)
 
     def intensity(self, i):
-        # adjust the intensity within 15 levels
+        # adjust the intensity within 16 levels
         if 0 <= i <= 15:
             self._writeall(INTENSITY, i)
     
@@ -157,7 +157,7 @@ for i in range(8):
     p.append((i, i))
 for i in range(8,16):
     p.append((i%8, i))
-m.pixels("1", *p)
+m.pixels("1", p)
 print(m.changedrow)
 start = ticks_ms()
 m.refresh()
@@ -171,7 +171,7 @@ for i in range(8):
     p.append((i, 3))
 for i in range(8):
     p.append((i, 11))
-m.pixels("1", *p)
+m.pixels("1", p)
 print(m.changedrow)
 start = ticks_ms()
 m.refresh()
