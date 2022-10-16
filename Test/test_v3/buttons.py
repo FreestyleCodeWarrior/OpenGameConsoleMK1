@@ -3,8 +3,7 @@
 # Test device: Espressif ESP32-WROOM-32
 
 class Buttons:
-    def __init__(self, pin, timer, **buttons):
-        self.pin = pin # machine.Pin
+    def __init__(self, timer, **buttons):
         self.timer = timer # time.Timer
         self.buttons = buttons # {"button name": Pin object}
         
@@ -19,7 +18,7 @@ class Buttons:
     def _initbuttons(self):
         # set pins of all buttons as pull-down and input pins
         for button_pin in self.buttons.values():
-            button_pin.init(self.pin.IN, self.pin.PULL_DOWN)
+            button_pin.init(button_pin.IN, button_pin.PULL_DOWN)
     
     def _settimer(self):
         # configure the timer for detecting states of pins
@@ -89,7 +88,7 @@ class Test:
         print("b =", self.b)
 
 t = Test()
-b = Buttons(Pin, Timer(0),
+b = Buttons(Timer(0),
     aplus=Pin(27),
     asub=Pin(5),
     bplus=Pin(23),
