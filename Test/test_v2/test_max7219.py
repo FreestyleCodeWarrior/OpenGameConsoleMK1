@@ -79,6 +79,7 @@ class LedMatrix:
     def clearbuffer(self):
         # set the buffer to the initial state
         self._initbuffer()
+        self.changedrow.clear()
     
     def directrow(self, row, data):
         # directly write led data and show

@@ -39,18 +39,3 @@ class Buzzer:
         if not self.mute:
             self.pin.off()
             self._settimer(duration)
-
-#==========
-from machine import Pin, Timer
-from time import sleep
-
-b = Buzzer(Pin(0), Timer(1))
-
-b.on()
-sleep(0.5)
-b.off()
-
-sleep(1)
-b.buzz(100)
-
-

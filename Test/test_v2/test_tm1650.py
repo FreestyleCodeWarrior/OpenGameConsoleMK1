@@ -45,6 +45,7 @@ ENCODE = {
 class LedDigitalTube:
     def __init__(self, si2c):
         self.si2c = si2c # machine.SoftI2C object for communication
+        self.si2c.init(freq=9000000)
         self._intensity = INT[0]
         self._segmode = SEG8
         self._state = POWERON

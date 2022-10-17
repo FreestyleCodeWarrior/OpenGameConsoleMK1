@@ -34,13 +34,9 @@ class Buttons:
             if self.buttons[button].value() == 1:
                 self.handlers[button][0](*self.handlers[button][1])
     
-    def detectperiod(self, period):
-        # set the period of checking states of buttons
-        self.timer_period = period
-        self._settimer()
-    
-    def start(self):
+    def start(self, period):
         # start the timer for checking pins
+        self.timer_period = period # set the period of checking states of buttons
         self.timer_callback = self._callback
         self._settimer()
     
