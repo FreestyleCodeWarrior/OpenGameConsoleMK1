@@ -3,41 +3,42 @@
 # Espressif ESP32-WROOM-32
 
 class Peripheral:
-    def __init__(self, constant, LedMatrix, LedDigitalTube, Buzzer, Buttons, SPI, SoftI2C, Pin, Timer):
-        self._init_screen(constant, LedMatrix, SPI, Pin)
-        self._init_timer(constant, LedDigitalTube, SoftI2C, Pin)
-        self._init_scorer(constant, LedDigitalTube, SoftI2C, Pin)
-        self._init_buttons(constant, Buttons, Timer, Pin)
-        self._init_buzzer(constant, Buzzer, Timer, Pin)
+    def __init__(self, HardwareID, LedMatrix, LedDigitalTube, Buzzer, Buttons, SPI, SoftI2C, Pin, Timer):
+        hardwareID = HardwareID()
+        self._init_screen(hardwareID, LedMatrix, SPI, Pin)
+        self._init_timer(hardwareID, LedDigitalTube, SoftI2C, Pin)
+        self._init_scorer(hardwareID, LedDigitalTube, SoftI2C, Pin)
+        self._init_buttons(hardwareID, Buttons, Timer, Pin)
+        self._init_buzzer(hardwareID, Buzzer, Timer, Pin)
     
-    def _init_screen(self, constant, LedMatrix, SPI, Pin):
-        spi = SPI(constant.screen_spi_id)
-        cs_0 = Pin(constant.screen_cs_0)
-        cs_1 = Pin(constant.screen_cs_1)
+    def _init_screen(self, hardwareID, LedMatrix, SPI, Pin):
+        spi = SPI(hardwareID.screen_spi_id)
+        cs_0 = Pin(hardwareID.screen_cs_0)
+        cs_1 = Pin(hardwareID.screen_cs_1)
         self.screen = LedMatrix(spi, [cs_0, cs_1])
     
-    def _init_timer(self, constant, LedDigitalTube, SoftI2C, Pin):
-        scl = Pin(constant.timer_scl)
-        sda = Pin(constant.timer_sda)
+    def _init_timer(self, hardwareID, LedDigitalTube, SoftI2C, Pin):
+        scl = Pin(hardwareID.timer_scl)
+        sda = Pin(hardwareID.timer_sda)
         self.timer = LedDigitalTube(SoftI2C, scl, sda)
     
-    def _init_scorer(self, constant, LedDigitalTube, SoftI2C, Pin):
-        scl = Pin(constant.scorer_scl)
-        sda = Pin(constant.scorer_sda)
+    def _init_scorer(self, hardwareID, LedDigitalTube, SoftI2C, Pin):
+        scl = Pin(hardwareID.scorer_scl)
+        sda = Pin(hardwareID.scorer_sda)
         self.scorer = LedDigitalTube(SoftI2C, scl, sda)
     
-    def _init_buttons(self, constant, Buttons, Timer, Pin):
-        up_pin = Pin(constant.button_up_pin)
-        down_pin = Pin(constant.button_down_pin)
-        left_pin = Pin(constant.button_left_pin)
-        right_pin = Pin(constant.button_right_pin)
-        ok_pin = Pin(constant.button_ok_pin)
-        back_pin = Pin(constant.button_back_pin)
-        timer = Timer(constant.button_timer_id)
+    def _init_buttons(self, hardwareID, Buttons, Timer, Pin):
+        up_pin = Pin(hardwareID.button_up_pin)
+        down_pin = Pin(hardwareID.button_down_pin)
+        left_pin = Pin(hardwareID.button_left_pin)
+        right_pin = Pin(hardwareID.button_right_pin)
+        ok_pin = Pin(hardwareID.button_ok_pin)
+        back_pin = Pin(hardwareID.button_back_pin)
+        timer = Timer(hardwareID.button_timer_id)
         self.buttons = Buttons(timer, up=up_pin, down=down_pin, right=right_pin, left=left_pin, ok=ok_pin,back=back_pin)
     
-    def _init_buzzer(self, constant, Buzzer, Timer, Pin):
-        pin = Pin(constant.buzzer_pin)
-        timer = Timer(constant.buzzer_timer_id)
+    def _init_buzzer(self, hardwareID, Buzzer, Timer, Pin):
+        pin = Pin(hardwareID.buzzer_pin)
+        timer = Timer(hardwareID.buzzer_timer_id)
         self.buzzer = Buzzer(pin, timer)
         

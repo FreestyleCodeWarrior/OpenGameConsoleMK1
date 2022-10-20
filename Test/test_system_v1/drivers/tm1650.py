@@ -40,6 +40,35 @@ ENCODE = {
     "7":7,
     "8":127,
     "9":111,
+    "A":119,
+    "b":124,
+    "C":57,
+    "c":88,
+    "d":94,
+    "E":121,
+    "F":113,
+    "G":61,
+    "H":118,
+    "h":116,
+    "I":6,
+    "J":30,
+    "K":118,
+    "L":56,
+    "M":85,
+    "n":84,
+    "O":63,
+    "o":92,
+    "P":115,
+    "q":103,
+    "r":80,
+    "S":109,
+    "t":120,
+    "U":62,
+    "u":28,
+    "v":28,
+    "X":118,
+    "y":110,
+    "Z":91
     }
 
 class LedDigitalTube:
@@ -62,14 +91,14 @@ class LedDigitalTube:
         self._write(SETTING,\
         eval("0b0{}{}{}{}00{}".format(*self._intensity, self._segmode, self._state)))
     
-    def digits(self, nums):
+    def chars(self, c):
         # accept a string 4 characters long and display
         for pos in range(4):
-            self._write(DIG[pos], ENCODE[nums[pos]])
+            self._write(DIG[pos], ENCODE[c[pos]])
         
-    def digit(self, pos, num):
+    def char(self, pos, c):
         # display one digit and its position then display
-        self._write(DIG[pos], ENCODE[num])
+        self._write(DIG[pos], ENCODE[c])
     
     def segments(self, data):
         # accept display data in a list and display
