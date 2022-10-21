@@ -47,7 +47,8 @@ class LedMatrix:
     def _initsettings(self):
         # prepare chips for matrices display
         self.test(0)
-        self.intensity(0)
+        self._intensity = 0
+        self._writeall(INTENSITY, self._intensity)
         self._writeall(SCANLIMIT, 0x7)
         self._writeall(DECODEMODE, 0x0)
         self.clear()
@@ -81,12 +82,11 @@ class LedMatrix:
         self._initbuffer()
         self.changedrow.clear()
     
-    def directrow(self, row, data):
+    def directrow(self, cs, row, data):
         # directly write led data and show
         # the buffer is not altered
-        cs, row = divmod(row, 8)
         self.cs_pins[cs].off()
-        self.spi.write(bytearray([row+1, data]))
+        self.spi.write(bytearray([row, data]))
         self.cs_pins[cs].on()
     
     def clear(self):
@@ -102,10 +102,15 @@ class LedMatrix:
         elif on == 0:
             self._writeall(DISPLAYTEST, 0x0)
 
-    def intensity(self, i):
-        # adjust the intensity within 16 levels
-        if 0 <= i <= 15:
-            self._writeall(INTENSITY, i)
+    def intensity(self, mode, value=None):
+        # adjust intensity and write the value into corresponding register
+        if mode == 1 and self._intensity < 15:
+            self._intensity += 1
+        elif mode == 0 and self._intensity > 0:
+            self._intensity -= 1
+        elif mode == 2:
+            self._intensity = value
+        self._writeall(INTENSITY, self._intensity)
     
     def switch(self, state):
         # turn on \ off the power supply to each LED

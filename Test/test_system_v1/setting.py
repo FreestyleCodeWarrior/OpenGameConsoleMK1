@@ -4,19 +4,23 @@
 
 class Setting:
     def __init__(self, json, filename):
-        self.filename = filename.conf
+        self.json = json
+        self.filename = filename
         self.read()
+    
     
     def read(self):
         try:
             with open(self.filename, "r") as file:
-                self.info = json.load(file)
+                self.info = self.json.load(file)
         except:
             self.default()
     
+    
     def save(self):
         with open(self.filename, "w") as file:
-            json.dump(self.info, file)
+            self.json.dump(self.info, file)
+    
     
     def default(self):
         self.info = {
@@ -24,7 +28,7 @@ class Setting:
                 "intensity":{
                     "screen":0,
                     "timer":0,
-                    "scorer":0}
+                    "scorer":0},
                 "sound":1
                 }
             }

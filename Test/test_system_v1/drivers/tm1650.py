@@ -74,7 +74,7 @@ ENCODE = {
 class LedDigitalTube:
     def __init__(self, SoftI2C, scl, sda):
         self.si2c = SoftI2C(scl, sda, freq=10000000) # machine.SoftI2C object for communication
-        self._intensity = INT[0]
+        self._intensity = 0
         self._segmode = SEG8
         self._state = POWERON
         self._set()        
@@ -89,7 +89,7 @@ class LedDigitalTube:
     def _set(self):
         # set intensity, segment display mode and work state
         self._write(SETTING,\
-        eval("0b0{}{}{}{}00{}".format(*self._intensity, self._segmode, self._state)))
+        eval("0b0{}{}{}{}00{}".format(*INT[self._intensity], self._segmode, self._state)))
     
     def chars(self, c):
         # accept a string 4 characters long and display
@@ -118,9 +118,14 @@ class LedDigitalTube:
         for pos in range(4):
             self._write(DIG[pos], 0)
     
-    def intensity(self, i):
+    def intensity(self, mode, value=None):
         # adjust the intensity within 8 levels
-        self._intensity = INT[i]
+        if mode == 1 and self._intensity < 7:
+            self._intensity += 1
+        elif mode == 0 and self._intensity > 0:
+            self._intensity -= 1
+        elif mode == 2:
+            self._intensity = value
         self._set()
     
     def segmode(self, mode):

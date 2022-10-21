@@ -17,7 +17,7 @@ class Buzzer:
         # initialize the timer for turning off the buzzer after a certain period of time 
         self.timer.init(mode=self.timer.ONE_SHOT, period=period, callback=self.off)
     
-    def switch(state):
+    def switch(self, state):
         # turn on/off the mute mode
         if state == 1:
             self.mute = False

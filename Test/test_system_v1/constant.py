@@ -10,18 +10,22 @@ class HardwareID:
         self._button()
         self._buzzer()
     
+    
     def _screen(self):
         self.screen_spi_id = 1
         self.screen_cs_0 = 32
         self.screen_cs_1 = 33
     
+    
     def _timer(self):
         self.timer_scl = 18
         self.timer_sda = 19
     
+    
     def _scorer(self):
         self.scorer_scl = 25
         self.scorer_sda = 26
+    
     
     def _button(self):
         self.button_up_pin = 2
@@ -32,6 +36,7 @@ class HardwareID:
         self.button_back_pin = 27
         self.button_timer_id = 0
     
+    
     def _buzzer(self):
         self.buzzer_pin = 0
         self.buzzer_timer_id = 1
@@ -39,70 +44,121 @@ class HardwareID:
 
 class Icon:
     def __init__(self):
-        self.sun = (
-            0b10011001,
-            0b01011010,
-            0b00000000,
-            0b11011011,
-            0b11011011,
-            0b00000000,
-            0b01011010,
-            0b10011001)
-        self.speaker = (
-            0b00000100,
-            0b00010110,
-            0b00110110,
-            0b11110110,
-            0b11110110,
-            0b00110110,
-            0b00010110,
-            0b00000100)
-        self.circle = (
-            0b00011000,
-            0b00111100,
-            0b01100110,
-            0b11000011,
-            0b11000011,
-            0b01100110,
-            0b00111100,
-            0b00011000)
-        self.cross = (
-            0b11000011,
-            0b11100111,
-            0b01111110,
-            0b00111100,
-            0b00111100,
-            0b01111110,
-            0b11100111,
-            0b11000011)
-        self.tool = (
-             0b01010010,
-             0b01010010,
-             0b01010010,
-             0b01011110,
-             0b01001100,
-             0b11101100,
-             0b11101100,
-             0b11101100)
-        self.monster = (
-             0b00100100,
-             0b00100100,
-             0b01111110,
-             0b11011011,
-             0b11111111,
-             0b11111111,
-             0b10100101,
-             0b00100100)
+        pass
+    
+    
+    def sun(self):
+        return (0b10011001,
+                0b01011010,
+                0b00000000,
+                0b11011011,
+                0b11011011,
+                0b00000000,
+                0b01011010,
+                0b10011001)
+    
+    
+    def speaker(self):
+        return (0b00000100,
+                0b00010110,
+                0b00110110,
+                0b11110110,
+                0b11110110,
+                0b00110110,
+                0b00010110,
+                0b00000100)
+    
+    
+    def circle(self):
+        return (0b00011000,
+                0b00111100,
+                0b01100110,
+                0b11000011,
+                0b11000011,
+                0b01100110,
+                0b00111100,
+                0b00011000)
+    
+    
+    def cross(self):
+        return (0b11000011,
+                0b11100111,
+                0b01111110,
+                0b00111100,
+                0b00111100,
+                0b01111110,
+                0b11100111,
+                0b11000011)
+    
+    
+    def tool(self):
+        return (0b01010010,
+                0b01010010,
+                0b01010010,
+                0b01011110,
+                0b01001100,
+                0b11101100,
+                0b11101100,
+                0b11101100)
+    
+    
+    def monster(self):
+        return (0b00100100,
+                0b00100100,
+                0b01111110,
+                0b11011011,
+                0b11111111,
+                0b11111111,
+                0b10100101,
+                0b00100100)
+    
+    
+    def fill(self):
+        return tuple(0b11111111 for _ in range(8))
+    
+    
+    def empty(self):
+        return tuple(0b00000000 for _ in range(8))
+    
+    
+    def indicator(self, up=False, down=False, left=False, right=False):
+        rows = [0]
         
-        self.up_ind = ((3, 9), (4, 9), (3, 10), (4, 10))
-        self.down_ind = ((3, 13), (4, 13), (3, 14), (4, 14))
-        self.left_ind = ((1, 11), (2, 11), (1, 12), (2, 12))
-        self.right_ind = ((5, 11), (6, 11), (5, 12), (6, 12))
+        if up:
+            rows += [24, 24]
+        else:
+            rows += [0, 0]
+            
+        if left and right:
+            rows += [102, 102]
+        elif left:
+            rows += [96, 96]
+        elif right:
+            rows += [6, 6]
+        else:
+            rows += [0, 0]
+            
+        if down:
+            rows += [24, 24]
+        else:
+            rows += [0, 0]
+            
+        rows.append(0)
+        
+        return tuple(rows)
+        
 
-class FileName:
+class Filename:
     def __init__(self):
-        self.conf = "configuration.json"
-        self.score_records = "scores.json"
+        pass
+    
+    
+    def config(self):
+        return "configuration.json"
+    
+    
+    def scores(self):
+        return "scores_records.json"
 
 
 

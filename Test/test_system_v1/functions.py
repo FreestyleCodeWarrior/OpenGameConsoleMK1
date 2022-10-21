@@ -3,9 +3,8 @@
 # Espressif ESP32-WROOM-32
 
 def init_perl_state(Setting, Filename, perl, json):
-    info = Setting(json, Filename()).info
-    perl.screen.intensity(info["general"]["intensity"]["screen"])
-    perl.timer.intensity(info["general"]["intensity"]["timer"])
-    perl.scorer.intensity(info["general"]["intensity"]["scorer"])
-    perl.buzzer.switch(info["general"]["sound"])
-    
+    info = Setting(json, Filename().config()).info
+    perl.screen.intensity(2, info["general"]["intensity"]["screen"])
+    perl.timer.intensity(2, info["general"]["intensity"]["timer"])
+    perl.scorer.intensity(2, info["general"]["intensity"]["scorer"])
+    perl.buzzer.switch(info["general"]["sound"])    
