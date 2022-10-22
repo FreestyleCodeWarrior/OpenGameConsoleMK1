@@ -26,7 +26,7 @@ class Page:
         for rows, cs in ((screen_upside, 0), (screen_downside, 1)):
             if rows:
                 for i in range(8):
-                    self.perl.screen.directrow(cs, i, rows[i])
+                    self.perl.screen.directrow(cs, i+1, rows[i])
         for driver, characters in ((self.perl.timer, timer), (self.perl.scorer, scorer)):
             if characters:
                 driver.chars(characters)
@@ -51,14 +51,14 @@ class Page:
         self._button(right=self.config_sound,
                      ok=self.config_intensity_screen,
                      back=self.config)
-        self._disp(screen_upside=self.icon.sun(),
+        self._disp(screen_upside=self.icon.diode(),
                   screen_downside=self.icon.indicator(right=True),
                   timer="COnF",
                   scorer="Int ")
     
     def config_intensity_screen(self):
-        self._button(up=(self.perl.screen.intensity, (1)),
-                     down=(self.perl.screen.intensity, (0)),
+        self._button(up=(self.perl.screen.intensity, (1,)),
+                     down=(self.perl.screen.intensity, (0,)),
                      right=self.config_intensity_timer,
                      back=self.config_intensity)
         self._disp(screen_upside=self.icon.fill(),
@@ -67,22 +67,22 @@ class Page:
                    scorer="    ")
     
     def config_intensity_timer(self):
-        self._button(up=(self.perl.timer.intensity, (1)),
-                     down=(self.perl.timer.intensity, (0)),
+        self._button(up=(self.perl.timer.intensity, (1,)),
+                     down=(self.perl.timer.intensity, (0,)),
                      right=self.config_intensity_scorer,
                      left=self.config_intensity_screen,
                      back=self.config_intensity)
-        self._disp(screen_upside=self.icon.fill(),
+        self._disp(screen_upside=self.icon.empty(),
                    screen_downside=self.icon.indicator(up=True, down=True, left=True, right=True),
                    timer="8888",
                    scorer="    ")
     
     def config_intensity_scorer(self):
-        self._button(up=(self.perl.scorer.intensity, (1)),
-                     down=(self.perl.scorer.intensity, (0)),
+        self._button(up=(self.perl.scorer.intensity, (1,)),
+                     down=(self.perl.scorer.intensity, (0,)),
                      left=self.config_intensity_timer,
                      back=self.config_intensity)
-        self._disp(screen_upside=self.icon.fill(),
+        self._disp(screen_upside=self.icon.empty(),
                    screen_downside=self.icon.indicator(up=True, down=True, left=True),
                    timer="    ",
                    scorer="8888")
@@ -93,9 +93,9 @@ class Page:
             if state == 1:
                 self._disp(scorer="On  ")
             elif state == 0:
-                self._disp(scorer="OFF")                
-        self._button(up=(update_buzzer, (1)),
-                     down=(update_buzzer, (0)),
+                self._disp(scorer="OFF ")                
+        self._button(up=(update_buzzer, (1,)),
+                     down=(update_buzzer, (0,)),
                      left=self.config_intensity,
                      back=self.config)
         self._disp(screen_upside=self.icon.speaker(),
