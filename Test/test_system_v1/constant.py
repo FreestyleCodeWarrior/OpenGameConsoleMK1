@@ -51,7 +51,7 @@ class Icon:
         return (0b01111110,
                 0b01000010,
                 0b01011010,
-                0b01000010,
+                0b01011010,
                 0b11111111,
                 0b00100100,
                 0b00100100,
@@ -96,7 +96,7 @@ class Icon:
                 0b01001001,
                 0b01001001,
                 0b01001111,
-                0b01000110,
+                0b11100110,
                 0b11100110,
                 0b11100110,
                 0b11100110)
@@ -157,27 +157,3 @@ class Icon:
         rows.append(0)
         
         return tuple(rows)
-        
-
-class Filename:
-    def __init__(self):
-        pass
-    
-    
-    def config(self):
-        return "configuration.json"
-    
-    
-    def scores(self):
-        return "scores_records.json"
-
-
-
-
-
-
-
-
-
-
-

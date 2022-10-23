@@ -3,9 +3,12 @@
 # Espressif ESP32-WROOM-32
 
 class Page:
-    def __init__(self, icon, perl):
+    def __init__(self, icon, perl, funcs, json, Setting):
         self.icon = icon
         self.perl = perl
+        self.funcs = funcs
+        self.json = json
+        self.Setting = Setting
         self.play()
     
     def _button(self, up=None, down=None, left=None, right=None, ok=None, back=None):
@@ -88,20 +91,26 @@ class Page:
                    scorer="8888")
     
     def config_sound(self):
-        def update_buzzer(state):
-            self.perl.buzzer.switch(state)
-            if state == 1:
-                self._disp(scorer="On  ")
-            elif state == 0:
-                self._disp(scorer="OFF ")                
-        self._button(up=(update_buzzer, (1,)),
-                     down=(update_buzzer, (0,)),
+        self._button(up=(self.funcs.update_buzzer, (self.perl, 1)),
+                     down=(self.funcs.update_buzzer, (self.perl, 0)),
                      left=self.config_intensity,
+                     right=self.config_save,
                      back=self.config)
         self._disp(screen_upside=self.icon.speaker(),
-                   screen_downside=self.icon.indicator(up=True, down=True, left=True),
+                   screen_downside=self.icon.indicator(up=True, down=True, left=True, right=True),
                    timer="bEEP",
                    scorer="OFF " if self.perl.buzzer.mute else "On  ")
+    
+    
+    def config_save(self):
+        self._button(up=(self.funcs.save_perl_state, (self.Setting, self.perl, self.json)),
+                     down=(self.funcs.default_perl_state, (self.Setting, self.perl, self.json)),
+                     left=self.config_sound,
+                     back=self.config)
+        self._disp(screen_upside=self.icon.disk(),
+                   screen_downside=self.icon.indicator(up=True, down=True, left=True),
+                   timer="SAUE",
+                   scorer="COnF")
     
     
         

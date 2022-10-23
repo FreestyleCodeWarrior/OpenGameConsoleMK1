@@ -3,9 +3,9 @@
 # Espressif ESP32-WROOM-32
 
 class Setting:
-    def __init__(self, json, filename):
+    def __init__(self, json):
         self.json = json
-        self.filename = filename
+        self.filename = "Configuration.json"
         self.read()
     
     

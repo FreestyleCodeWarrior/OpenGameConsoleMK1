@@ -14,7 +14,7 @@ from drivers.buttons import Buttons
 from drivers.buzzer import Buzzer
 
 import functions
-from constant import HardwareID, Icon, Filename
+from constant import HardwareID, Icon
 from peripheral import Peripheral
 from page import Page
 from setting import Setting
@@ -24,16 +24,16 @@ from time import sleep
 if __name__ == "__main__":
     p = Peripheral(HardwareID, LedMatrix, LedDigitalTube, Buzzer, Buttons, SPI, SoftI2C, Pin, Timer)
     p.screen.test(1)
-    p.timer.chars("1234")
-    p.scorer.chars("5678")
+    p.timer.chars("8888")
+    p.scorer.chars("8888")
     p.buzzer.buzz(100)
     sleep(0.2)
     p.screen.test(0)
     p.timer.chars("    ")
     p.scorer.chars("    ")
     
-    functions.init_perl_state(Setting, Filename, p, json)
-    page = Page(Icon(), p)
-    p.buttons.start()
+    functions.init_perl_state(Setting, p, json)
+    page = Page(Icon(), p, functions, json, Setting)
+    p.buttons.start(100)
     
     
