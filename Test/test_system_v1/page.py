@@ -3,8 +3,8 @@
 # Espressif ESP32-WROOM-32
 
 class Page:
-    def __init__(self, icon, perl, funcs, json, sleep_ms, randint, Setting):
-        self.icon = icon
+    def __init__(self, icons, perl, funcs, json, sleep_ms, randint, Setting):
+        self.icons = icons
         self.perl = perl
         self.funcs = funcs
         self.json = json
@@ -38,16 +38,16 @@ class Page:
     
     def play(self):
         self._button(right=self.config)
-        self._disp(screen_upside=self.icon.monster(),
-                   screen_downside=self.icon.indicator(right=True),
+        self._disp(screen_upside=self.icons.monster(),
+                   screen_downside=self.icons.indicator(right=True),
                    timer="PLAy",
                    scorer="GAME")
     
     def config(self):
         self._button(left=self.play,
                      ok=self.config_intensity)
-        self._disp(screen_upside=self.icon.tool(),
-                   screen_downside=self.icon.indicator(left=True),
+        self._disp(screen_upside=self.icons.tool(),
+                   screen_downside=self.icons.indicator(left=True),
                    timer="SEt ",
                    scorer="COnF")
     
@@ -55,8 +55,8 @@ class Page:
         self._button(right=self.config_sound,
                      ok=self.config_intensity_screen,
                      back=self.config)
-        self._disp(screen_upside=self.icon.diode(),
-                  screen_downside=self.icon.indicator(right=True),
+        self._disp(screen_upside=self.icons.diode(),
+                  screen_downside=self.icons.indicator(right=True),
                   timer="COnF",
                   scorer="Int ")
     
@@ -65,8 +65,8 @@ class Page:
                      down=(self.perl.screen.intensity, (0,)),
                      right=self.config_intensity_timer,
                      back=self.config_intensity)
-        self._disp(screen_upside=self.icon.fill(),
-                   screen_downside=self.icon.indicator(up=True, down=True, right=True),
+        self._disp(screen_upside=self.icons.fill(),
+                   screen_downside=self.icons.indicator(up=True, down=True, right=True),
                    timer="    ",
                    scorer="    ")
     
@@ -76,8 +76,8 @@ class Page:
                      right=self.config_intensity_scorer,
                      left=self.config_intensity_screen,
                      back=self.config_intensity)
-        self._disp(screen_upside=self.icon.empty(),
-                   screen_downside=self.icon.indicator(up=True, down=True, left=True, right=True),
+        self._disp(screen_upside=self.icons.empty(),
+                   screen_downside=self.icons.indicator(up=True, down=True, left=True, right=True),
                    timer="8888",
                    scorer="    ")
     
@@ -86,8 +86,8 @@ class Page:
                      down=(self.perl.scorer.intensity, (0,)),
                      left=self.config_intensity_timer,
                      back=self.config_intensity)
-        self._disp(screen_upside=self.icon.empty(),
-                   screen_downside=self.icon.indicator(up=True, down=True, left=True),
+        self._disp(screen_upside=self.icons.empty(),
+                   screen_downside=self.icons.indicator(up=True, down=True, left=True),
                    timer="    ",
                    scorer="8888")
     
@@ -97,8 +97,8 @@ class Page:
                      left=self.config_intensity,
                      right=self.config_save,
                      back=self.config)
-        self._disp(screen_upside=self.icon.speaker(),
-                   screen_downside=self.icon.indicator(up=True, down=True, left=True, right=True),
+        self._disp(screen_upside=self.icons.speaker(),
+                   screen_downside=self.icons.indicator(up=True, down=True, left=True, right=True),
                    timer="bEEP",
                    scorer="OFF " if self.perl.buzzer.mute else "On  ")
     
@@ -108,8 +108,8 @@ class Page:
                      down=(self.funcs.default_perl_state, (self.Setting, self.perl, self.json, self.sleep_ms, self.randint)),
                      left=self.config_sound,
                      back=self.config)
-        self._disp(screen_upside=self.icon.disk(),
-                   screen_downside=self.icon.indicator(up=True, down=True, left=True),
+        self._disp(screen_upside=self.icons.disk(),
+                   screen_downside=self.icons.indicator(up=True, down=True, left=True),
                    timer="SAUE",
                    scorer="COnF")
     

@@ -5,7 +5,7 @@
 class Setting:
     def __init__(self, json):
         self.json = json
-        self.filename = "Configuration.json"
+        self.filename = "configuration.json"
         self.read()
     
     

@@ -1,44 +1,95 @@
-# Objects of Peripherals are created in this class 
+# Objects of peripherals are created in the class Peripheral
 # MicroPython version: v1.19.1 on 2022-06-18
 # Espressif ESP32-WROOM-32
 
-class Peripheral:
-    def __init__(self, HardwareID, LedMatrix, LedDigitalTube, Buzzer, Buttons, SPI, SoftI2C, Pin, Timer):
-        hardwareID = HardwareID()
-        self._init_screen(hardwareID, LedMatrix, SPI, Pin)
-        self._init_timer(hardwareID, LedDigitalTube, SoftI2C, Pin)
-        self._init_scorer(hardwareID, LedDigitalTube, SoftI2C, Pin)
-        self._init_buttons(hardwareID, Buttons, Timer, Pin)
-        self._init_buzzer(hardwareID, Buzzer, Timer, Pin)
+
+class HardwareID:
+    def __init__(self):
+        self._screen()
+        self._timer()
+        self._scorer()
+        self._button()
+        self._buzzer()
     
-    def _init_screen(self, hardwareID, LedMatrix, SPI, Pin):
-        spi = SPI(hardwareID.screen_spi_id)
-        cs_0 = Pin(hardwareID.screen_cs_0)
-        cs_1 = Pin(hardwareID.screen_cs_1)
+    
+    def _screen(self):
+        self.screen_spi_id = 1
+        self.screen_cs_0 = 32
+        self.screen_cs_1 = 33
+    
+    
+    def _timer(self):
+        self.timer_scl = 18
+        self.timer_sda = 19
+    
+    
+    def _scorer(self):
+        self.scorer_scl = 25
+        self.scorer_sda = 26
+    
+    
+    def _button(self):
+        self.button_up_pin = 2
+        self.button_down_pin = 4
+        self.button_left_pin = 5
+        self.button_right_pin = 22
+        self.button_ok_pin = 23
+        self.button_back_pin = 27
+        self.button_timer_id = 0
+    
+    
+    def _buzzer(self):
+        self.buzzer_pin = 0
+        self.buzzer_timer_id = 1
+
+
+class Peripheral(HardwareID):
+    def __init__(self, LedMatrix, LedDigitalTube, Buzzer, Buttons, SPI, SoftI2C, Pin, Timer):
+        super().__init__()
+        self._init_screen(LedMatrix, SPI, Pin)
+        self._init_timer(LedDigitalTube, SoftI2C, Pin)
+        self._init_scorer(LedDigitalTube, SoftI2C, Pin)
+        self._init_buttons(Buttons, Timer, Pin)
+        self._init_buzzer(Buzzer, Timer, Pin)
+
+
+    def _init_screen(self, LedMatrix, SPI, Pin):
+        spi = SPI(self.screen_spi_id)
+        cs_0 = Pin(self.screen_cs_0)
+        cs_1 = Pin(self.screen_cs_1)
         self.screen = LedMatrix(spi, [cs_0, cs_1])
-    
-    def _init_timer(self, hardwareID, LedDigitalTube, SoftI2C, Pin):
-        scl = Pin(hardwareID.timer_scl)
-        sda = Pin(hardwareID.timer_sda)
+
+
+    def _init_timer(self, LedDigitalTube, SoftI2C, Pin):
+        scl = Pin(self.timer_scl)
+        sda = Pin(self.timer_sda)
         self.timer = LedDigitalTube(SoftI2C, scl, sda)
-    
-    def _init_scorer(self, hardwareID, LedDigitalTube, SoftI2C, Pin):
-        scl = Pin(hardwareID.scorer_scl)
-        sda = Pin(hardwareID.scorer_sda)
+
+
+    def _init_scorer(self, LedDigitalTube, SoftI2C, Pin):
+        scl = Pin(self.scorer_scl)
+        sda = Pin(self.scorer_sda)
         self.scorer = LedDigitalTube(SoftI2C, scl, sda)
-    
-    def _init_buttons(self, hardwareID, Buttons, Timer, Pin):
-        up_pin = Pin(hardwareID.button_up_pin)
-        down_pin = Pin(hardwareID.button_down_pin)
-        left_pin = Pin(hardwareID.button_left_pin)
-        right_pin = Pin(hardwareID.button_right_pin)
-        ok_pin = Pin(hardwareID.button_ok_pin)
-        back_pin = Pin(hardwareID.button_back_pin)
-        timer = Timer(hardwareID.button_timer_id)
-        self.buttons = Buttons(timer, up=up_pin, down=down_pin, right=right_pin, left=left_pin, ok=ok_pin,back=back_pin)
-    
-    def _init_buzzer(self, hardwareID, Buzzer, Timer, Pin):
-        pin = Pin(hardwareID.buzzer_pin)
-        timer = Timer(hardwareID.buzzer_timer_id)
+
+
+    def _init_buttons(self, Buttons, Timer, Pin):
+        up_pin = Pin(self.button_up_pin)
+        down_pin = Pin(self.button_down_pin)
+        left_pin = Pin(self.button_left_pin)
+        right_pin = Pin(self.button_right_pin)
+        ok_pin = Pin(self.button_ok_pin)
+        back_pin = Pin(self.button_back_pin)
+        timer = Timer(self.button_timer_id)
+        self.buttons = Buttons(timer,
+            up=up_pin,
+            down=down_pin,
+            right=right_pin,
+            left=left_pin,
+            ok=ok_pin,
+            back=back_pin)
+
+
+    def _init_buzzer(self, Buzzer, Timer, Pin):
+        pin = Pin(self.buzzer_pin)
+        timer = Timer(self.buzzer_timer_id)
         self.buzzer = Buzzer(pin, timer)
-        
