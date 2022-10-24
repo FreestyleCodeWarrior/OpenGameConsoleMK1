@@ -3,11 +3,13 @@
 # Espressif ESP32-WROOM-32
 
 class Page:
-    def __init__(self, icon, perl, funcs, json, Setting):
+    def __init__(self, icon, perl, funcs, json, sleep_ms, randint, Setting):
         self.icon = icon
         self.perl = perl
         self.funcs = funcs
         self.json = json
+        self.sleep_ms = sleep_ms
+        self.randint = randint
         self.Setting = Setting
         self.play()
     
@@ -28,11 +30,10 @@ class Page:
     def _disp(self, screen_upside=None, screen_downside=None, timer=None, scorer=None):
         for rows, cs in ((screen_upside, 0), (screen_downside, 1)):
             if rows:
-                for i in range(8):
-                    self.perl.screen.directrow(cs, i+1, rows[i])
+                self.funcs.flip_screen(self.perl.screen, rows, cs, self.sleep_ms)
         for driver, characters in ((self.perl.timer, timer), (self.perl.scorer, scorer)):
             if characters:
-                driver.chars(characters)
+                self.funcs.flip_led_tubes(driver, characters, self.sleep_ms, self.randint)
         
     
     def play(self):
@@ -91,8 +92,8 @@ class Page:
                    scorer="8888")
     
     def config_sound(self):
-        self._button(up=(self.funcs.update_buzzer, (self.perl, 1)),
-                     down=(self.funcs.update_buzzer, (self.perl, 0)),
+        self._button(up=(self.funcs.update_buzzer, (self.perl, 1, self.sleep_ms, self.randint)),
+                     down=(self.funcs.update_buzzer, (self.perl, 0, self.sleep_ms, self.randint)),
                      left=self.config_intensity,
                      right=self.config_save,
                      back=self.config)
@@ -103,8 +104,8 @@ class Page:
     
     
     def config_save(self):
-        self._button(up=(self.funcs.save_perl_state, (self.Setting, self.perl, self.json)),
-                     down=(self.funcs.default_perl_state, (self.Setting, self.perl, self.json)),
+        self._button(up=(self.funcs.save_perl_state, (self.Setting, self.perl, self.json, self.sleep_ms, self.randint)),
+                     down=(self.funcs.default_perl_state, (self.Setting, self.perl, self.json, self.sleep_ms, self.randint)),
                      left=self.config_sound,
                      back=self.config)
         self._disp(screen_upside=self.icon.disk(),

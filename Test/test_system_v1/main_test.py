@@ -3,6 +3,8 @@
 # Espressif ESP32-WROOM-32
 
 import json
+from time import sleep_ms
+from random import randint
 from machine import Pin
 from machine import SPI
 from machine import SoftI2C
@@ -33,7 +35,7 @@ if __name__ == "__main__":
     p.scorer.chars("    ")
     
     functions.init_perl_state(Setting, p, json)
-    page = Page(Icon(), p, functions, json, Setting)
+    page = Page(Icon(), p, functions, json, sleep_ms, randint, Setting)
     p.buttons.start(100)
     
     
