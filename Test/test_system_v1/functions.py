@@ -17,36 +17,31 @@ def flip_led_tubes(driver, characters, sleep_ms, randint):
     driver.chars(characters)
 
 
-def init_perl_state(Setting, perl, json):
-    info = Setting(json).info
-    perl.screen.intensity(2, info["general"]["intensity"]["screen"])
-    perl.timer.intensity(2, info["general"]["intensity"]["timer"])
-    perl.scorer.intensity(2, info["general"]["intensity"]["scorer"])
-    perl.buzzer.switch(info["general"]["sound"])
+def init_perl_state(config, perl, load):
+    data = config.read_perl_config(load)
+    perl.screen.intensity(2, data["intensity"]["screen"])
+    perl.timer.intensity(2, data["intensity"]["timer"])
+    perl.scorer.intensity(2, data["intensity"]["scorer"])
+    perl.buzzer.mute = data["mute"]
 
 
-def save_perl_state(Setting, perl, json, sleep_ms, randint):
-    setting = Setting(json)
-    setting.info["general"]["intensity"]["screen"] = perl.screen._intensity
-    setting.info["general"]["intensity"]["timer"] = perl.timer._intensity
-    setting.info["general"]["intensity"]["scorer"] = perl.scorer._intensity
-    setting.info["general"]["sound"] = 1 if not perl.buzzer.mute else 0
-    setting.save()
+def save_perl_state(config, perl, dump, sleep_ms, randint):
+    config.write_perl_config(perl, dump)
     flip_led_tubes(perl.timer, "SAUE", sleep_ms, randint)
     flip_led_tubes(perl.scorer, "SUCC", sleep_ms, randint)
 
 
-def default_perl_state(Setting, perl, json, sleep_ms, randint):
-    Setting(json).default()
-    init_perl_state(Setting, perl, json)
+def restore_perl_state(config, perl, dump, load, sleep_ms, randint):
+    config.write_perl_config(perl, dump, restore=True)
+    init_perl_state(config, perl, load)
     flip_led_tubes(perl.timer, "SEt ", sleep_ms, randint)
     flip_led_tubes(perl.scorer, "dEF ", sleep_ms, randint)
     
 
-def update_buzzer(perl, state, sleep_ms, randint):
-        perl.buzzer.switch(state)
-        if state == 1:
-            flip_led_tubes(perl.scorer, "On  ", sleep_ms, randint)
-        elif state == 0:
-            flip_led_tubes(perl.scorer, "OFF ", sleep_ms, randint)
+def update_buzzer(perl, mute, sleep_ms, randint):
+    perl.buzzer.mute = mute
+    if not mute:
+        flip_led_tubes(perl.scorer, "On  ", sleep_ms, randint)
+    elif mute:
+        flip_led_tubes(perl.scorer, "OFF ", sleep_ms, randint)
 

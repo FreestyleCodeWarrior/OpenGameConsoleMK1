@@ -2,8 +2,9 @@
 # MicroPython version: v1.19.1 on 2022-06-18
 # Espressif ESP32-WROOM-32
 
-import json
+
 from time import sleep_ms
+from json import dump, load
 from random import randint
 from machine import Pin
 from machine import SPI
@@ -17,9 +18,9 @@ from drivers.buzzer import Buzzer
 
 import functions
 import icons
+import configurator
 from peripheral import Peripheral
 from page import Page
-from setting import Setting
 
 from time import sleep
 
@@ -28,14 +29,15 @@ if __name__ == "__main__":
     p.screen.test(1)
     p.timer.chars("8888")
     p.scorer.chars("8888")
-    p.buzzer.buzz(100)
+    #p.buzzer.buzz(100)
     sleep(0.2)
     p.screen.test(0)
     p.timer.chars("    ")
     p.scorer.chars("    ")
-    
-    functions.init_perl_state(Setting, p, json)
-    page = Page(icons, p, functions, json, sleep_ms, randint, Setting)
+    """
+    functions.init_perl_state(configurator, p, load)
+    page = Page(icons, p, functions, configurator, dump, load, sleep_ms, randint)
     p.buttons.start(100)
+    """
     
     

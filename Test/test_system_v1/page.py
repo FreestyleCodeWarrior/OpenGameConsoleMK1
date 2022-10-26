@@ -3,14 +3,15 @@
 # Espressif ESP32-WROOM-32
 
 class Page:
-    def __init__(self, icons, perl, funcs, json, sleep_ms, randint, Setting):
+    def __init__(self, icons, perl, funcs, config, dump, load, sleep_ms, randint):
         self.icons = icons
         self.perl = perl
         self.funcs = funcs
-        self.json = json
+        self.config = config
+        self.dump = dump
+        self.load = load
         self.sleep_ms = sleep_ms
         self.randint = randint
-        self.Setting = Setting
         self.play()
     
     def _button(self, up=None, down=None, left=None, right=None, ok=None, back=None):
@@ -37,77 +38,77 @@ class Page:
         
     
     def play(self):
-        self._button(right=self.config)
+        self._button(right=self.setting)
         self._disp(screen_upside=self.icons.monster(),
                    screen_downside=self.icons.indicator(right=True),
                    timer="PLAy",
                    scorer="GAME")
     
-    def config(self):
+    def setting(self):
         self._button(left=self.play,
-                     ok=self.config_intensity)
+                     ok=self.setting_intensity)
         self._disp(screen_upside=self.icons.tool(),
                    screen_downside=self.icons.indicator(left=True),
                    timer="SEt ",
                    scorer="COnF")
     
-    def config_intensity(self):
-        self._button(right=self.config_sound,
-                     ok=self.config_intensity_screen,
-                     back=self.config)
+    def setting_intensity(self):
+        self._button(right=self.setting_sound,
+                     ok=self.setting_intensity_screen,
+                     back=self.setting)
         self._disp(screen_upside=self.icons.diode(),
                   screen_downside=self.icons.indicator(right=True),
                   timer="COnF",
                   scorer="Int ")
     
-    def config_intensity_screen(self):
+    def setting_intensity_screen(self):
         self._button(up=(self.perl.screen.intensity, (1,)),
                      down=(self.perl.screen.intensity, (0,)),
-                     right=self.config_intensity_timer,
-                     back=self.config_intensity)
+                     right=self.setting_intensity_timer,
+                     back=self.setting_intensity)
         self._disp(screen_upside=self.icons.fill(),
                    screen_downside=self.icons.indicator(up=True, down=True, right=True),
                    timer="    ",
                    scorer="    ")
     
-    def config_intensity_timer(self):
+    def setting_intensity_timer(self):
         self._button(up=(self.perl.timer.intensity, (1,)),
                      down=(self.perl.timer.intensity, (0,)),
-                     right=self.config_intensity_scorer,
-                     left=self.config_intensity_screen,
-                     back=self.config_intensity)
+                     right=self.setting_intensity_scorer,
+                     left=self.setting_intensity_screen,
+                     back=self.setting_intensity)
         self._disp(screen_upside=self.icons.empty(),
                    screen_downside=self.icons.indicator(up=True, down=True, left=True, right=True),
                    timer="8888",
                    scorer="    ")
     
-    def config_intensity_scorer(self):
+    def setting_intensity_scorer(self):
         self._button(up=(self.perl.scorer.intensity, (1,)),
                      down=(self.perl.scorer.intensity, (0,)),
-                     left=self.config_intensity_timer,
-                     back=self.config_intensity)
+                     left=self.setting_intensity_timer,
+                     back=self.setting_intensity)
         self._disp(screen_upside=self.icons.empty(),
                    screen_downside=self.icons.indicator(up=True, down=True, left=True),
                    timer="    ",
                    scorer="8888")
     
-    def config_sound(self):
-        self._button(up=(self.funcs.update_buzzer, (self.perl, 1, self.sleep_ms, self.randint)),
-                     down=(self.funcs.update_buzzer, (self.perl, 0, self.sleep_ms, self.randint)),
-                     left=self.config_intensity,
-                     right=self.config_save,
-                     back=self.config)
+    def setting_sound(self):
+        self._button(up=(self.funcs.update_buzzer, (self.perl, False, self.sleep_ms, self.randint)),
+                     down=(self.funcs.update_buzzer, (self.perl, True, self.sleep_ms, self.randint)),
+                     left=self.setting_intensity,
+                     right=self.setting_save,
+                     back=self.setting)
         self._disp(screen_upside=self.icons.speaker(),
                    screen_downside=self.icons.indicator(up=True, down=True, left=True, right=True),
                    timer="bEEP",
                    scorer="OFF " if self.perl.buzzer.mute else "On  ")
     
     
-    def config_save(self):
-        self._button(up=(self.funcs.save_perl_state, (self.Setting, self.perl, self.json, self.sleep_ms, self.randint)),
-                     down=(self.funcs.default_perl_state, (self.Setting, self.perl, self.json, self.sleep_ms, self.randint)),
-                     left=self.config_sound,
-                     back=self.config)
+    def setting_save(self):
+        self._button(up=(self.funcs.save_perl_state, (self.config, self.perl, self.dump, self.sleep_ms, self.randint)),
+                     down=(self.funcs.restore_perl_state, (self.config, self.perl, self.dump, self.load, self.sleep_ms, self.randint)),
+                     left=self.setting_sound,
+                     back=self.setting)
         self._disp(screen_upside=self.icons.disk(),
                    screen_downside=self.icons.indicator(up=True, down=True, left=True),
                    timer="SAUE",
@@ -115,6 +116,7 @@ class Page:
     
     
         
+
 
 
 
