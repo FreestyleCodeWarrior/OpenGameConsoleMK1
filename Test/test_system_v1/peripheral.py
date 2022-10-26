@@ -3,6 +3,17 @@
 # Espressif ESP32-WROOM-32
 
 
+from machine import Pin
+from machine import SPI
+from machine import SoftI2C
+from machine import Timer
+
+from drivers.max7219 import LedMatrix
+from drivers.tm1650 import LedDigitalTube
+from drivers.buttons import Buttons
+from drivers.buzzer import Buzzer
+
+
 class HardwareID:
     def __init__(self):
         self._screen()
@@ -44,7 +55,7 @@ class HardwareID:
 
 
 class Peripheral(HardwareID):
-    def __init__(self, LedMatrix, LedDigitalTube, Buzzer, Buttons, SPI, SoftI2C, Pin, Timer):
+    def __init__(self):
         super().__init__()
         self._init_screen(LedMatrix, SPI, Pin)
         self._init_timer(LedDigitalTube, SoftI2C, Pin)

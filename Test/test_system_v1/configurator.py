@@ -3,6 +3,10 @@
 # Espressif ESP32-WROOM-32
 
 
+from json import dump
+from json import load
+
+
 def default_perl_config():
     return {
         "intensity":{
@@ -14,7 +18,7 @@ def default_perl_config():
         }
 
 
-def read_perl_config(load):
+def read_perl_config():
     try:
         file = open("perl_config.json", "r")
     except:
@@ -25,7 +29,7 @@ def read_perl_config(load):
         return data
 
 
-def write_perl_config(perl, dump, restore=False):
+def write_perl_config(perl, restore=False):
     data = default_perl_config()
     if not restore:
         data["intensity"]["screen"] = perl.screen._intensity

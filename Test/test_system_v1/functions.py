@@ -3,45 +3,51 @@
 # Espressif ESP32-WROOM-32
 
 
-def flip_screen(screen, rows, cs, sleep_ms):
+from time import sleep_ms
+from random import randint
+
+import configurator as config
+
+
+def flip_screen(screen, rows, cs):
     for m in range(2):
         for n in range(8):
             screen.directrow(cs, n+1, 255 if m==0 else rows[n])
             sleep_ms(20)
 
 
-def flip_led_tubes(driver, characters, sleep_ms, randint):
+def flip_led_tubes(driver, characters):
     for _ in range(10):
         driver.segments(tuple(randint(1,255) for _ in range(4)))
         sleep_ms(20)
     driver.chars(characters)
 
 
-def init_perl_state(config, perl, load):
-    data = config.read_perl_config(load)
+def init_perl_state(perl):
+    data = config.read_perl_config()
     perl.screen.intensity(2, data["intensity"]["screen"])
     perl.timer.intensity(2, data["intensity"]["timer"])
     perl.scorer.intensity(2, data["intensity"]["scorer"])
     perl.buzzer.mute = data["mute"]
 
 
-def save_perl_state(config, perl, dump, sleep_ms, randint):
-    config.write_perl_config(perl, dump)
-    flip_led_tubes(perl.timer, "SAUE", sleep_ms, randint)
-    flip_led_tubes(perl.scorer, "SUCC", sleep_ms, randint)
+def save_perl_state(perl):
+    config.write_perl_config(perl)
+    flip_led_tubes(perl.timer, "SAUE")
+    flip_led_tubes(perl.scorer, "SUCC")
 
 
-def restore_perl_state(config, perl, dump, load, sleep_ms, randint):
-    config.write_perl_config(perl, dump, restore=True)
-    init_perl_state(config, perl, load)
-    flip_led_tubes(perl.timer, "SEt ", sleep_ms, randint)
-    flip_led_tubes(perl.scorer, "dEF ", sleep_ms, randint)
+def restore_perl_state(perl):
+    config.write_perl_config(perl, restore=True)
+    init_perl_state(perl)
+    flip_led_tubes(perl.timer, "SEt ")
+    flip_led_tubes(perl.scorer, "dEF ")
     
 
-def update_buzzer(perl, mute, sleep_ms, randint):
+def update_buzzer(perl, mute):
     perl.buzzer.mute = mute
     if not mute:
-        flip_led_tubes(perl.scorer, "On  ", sleep_ms, randint)
+        flip_led_tubes(perl.scorer, "On  ")
     elif mute:
-        flip_led_tubes(perl.scorer, "OFF ", sleep_ms, randint)
+        flip_led_tubes(perl.scorer, "OFF ")
 
