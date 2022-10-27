@@ -1,4 +1,3 @@
-# Objects of peripherals are created in the class Peripheral
 # MicroPython version: v1.19.1 on 2022-06-18
 # Espressif ESP32-WROOM-32
 
@@ -8,10 +7,10 @@ from machine import SPI
 from machine import SoftI2C
 from machine import Timer
 
-from drivers.max7219 import LedMatrix
-from drivers.tm1650 import LedDigitalTube
-from drivers.buttons import Buttons
-from drivers.buzzer import Buzzer
+from driver_max7219 import LedMatrix
+from driver_tm1650 import LedDigitalTube
+from driver_buttons import Buttons
+from driver_buzzer import Buzzer
 
 
 class HardwareID:

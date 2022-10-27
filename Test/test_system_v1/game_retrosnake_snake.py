@@ -1,4 +1,3 @@
-# Snake class used to encapsulate data and behavior of the snake
 # MicroPython version: v1.19.1 on 2022-06-18
 # Espressif ESP32-WROOM-32
 
@@ -17,17 +16,17 @@ class Snake:
     def _init_body(self):
         self.body.append((randint(3, 4), randint(3, 12)))
         for _ in range(2):
-            if self.direction == "u":
+            if self.dir == "u":
                 self.body.insert(0, (self.body[0][0], self.body[0][1]+1))
-            elif self.direction == "d":
+            elif self.dir == "d":
                 self.body.insert(0, (self.body[0][0], self.body[0][1]-1))
-            elif self.direction == "l":
-                self.body.insert(0, (self.body[0][0]+1, self.body[0][0]))
-            elif self.direction == "r":
-                self.body.insert(0, (self.body[0][0]-1, self.body[0][0]))
+            elif self.dir == "l":
+                self.body.insert(0, (self.body[0][0]+1, self.body[0][1]))
+            elif self.dir == "r":
+                self.body.insert(0, (self.body[0][0]-1, self.body[0][1]))
     
     
-    def move(self):
+    def move(self, apple):
         if self.dir == "u":
             self.body.append((self.body[-1][0], self.body[-1][1]-1))
         elif self.dir == "d":
@@ -36,5 +35,12 @@ class Snake:
             self.body.append((self.body[-1][0]-1, self.body[-1][1]))
         elif self.dir == "r":
             self.body.append((self.body[-1][0]+1, self.body[-1][1]))
-        return self.body.pop(0)
+        if apple:
+            return None
+        else:
+            return self.body.pop(0)
+    
+    
+    def turn(self, dir):
+        self.dir = dir
         
