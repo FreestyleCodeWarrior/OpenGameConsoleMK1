@@ -12,6 +12,7 @@ class Apples:
         while (coord in snake_body) or (coord in self.coords):
             coord = (randint(0, 7), randint(0, 15))
         self.coords[(coord[0], coord[1])] = ticks_ms()
+        return coord
 
 
     def remove(self, coord):
