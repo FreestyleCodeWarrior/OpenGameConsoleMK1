@@ -1,7 +1,3 @@
-# MicroPython version: v1.19.1 on 2022-06-18
-# Espressif ESP32-WROOM-32
-
-
 from json import dump
 from json import load
 
@@ -21,6 +17,7 @@ def read_perl_config():
     try:
         file = open("perl_config.json", "r")
     except:
+        write_perl_config(restore=True)
         return default_perl_config()
     else:
         data = load(file)
@@ -28,7 +25,7 @@ def read_perl_config():
         return data
 
 
-def write_perl_config(perl, restore=False):
+def write_perl_config(perl=None, restore=False):
     data = default_perl_config()
     if not restore:
         data["intensity"]["screen"] = perl.screen._intensity

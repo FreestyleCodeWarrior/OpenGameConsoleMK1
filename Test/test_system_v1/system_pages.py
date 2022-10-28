@@ -1,7 +1,3 @@
-# MicroPython version: v1.19.1 on 2022-06-18
-# Espressif ESP32-WROOM-32
-
-
 import system_functions as funcs
 import system_icons as icons
 

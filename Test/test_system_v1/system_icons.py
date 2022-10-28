@@ -1,7 +1,3 @@
-# MicroPython version: v1.19.1 on 2022-06-18
-# Espressif ESP32-WROOM-32
-
-
 def diode():
     return (0b01111110,
             0b01000010,

@@ -6,6 +6,9 @@ from system_peripheral import Peripheral
 from system_pages import Pages
 import system_functions
 
+
+from game_timer import GameTimer
+
 from time import sleep
 
 if __name__ == "__main__":
@@ -19,9 +22,15 @@ if __name__ == "__main__":
     p.timer.chars("    ")
     p.scorer.chars("    ")
     
+    """
     system_functions.init_perl_state(p)
     pages = Pages(p)
     p.buttons.start(100)
+    """
+    
+    g = GameTimer(p.timer, 10)
+    g.start()
+    
     
     
     

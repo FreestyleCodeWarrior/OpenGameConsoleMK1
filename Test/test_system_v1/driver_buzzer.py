@@ -1,6 +1,3 @@
-# MicroPython version: v1.19.1 on 2022-06-18
-# Espressif ESP32-WROOM-32
-
 class Buzzer:
     def __init__(self, pin, timer):
         self.pin = pin # the machine.Pin object connected to the buzzer module

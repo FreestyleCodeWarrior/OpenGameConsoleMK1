@@ -1,6 +1,3 @@
-# MicroPython version: v1.19.1 on 2022-06-18
-# Espressif ESP32-WROOM-32
-
 class Buttons:
     def __init__(self, timer, **buttons):
         self.timer = timer # time.Timer

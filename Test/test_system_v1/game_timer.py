@@ -1,36 +1,59 @@
-# MicroPython version: v1.19.1 on 2022-06-18
-# Espressif ESP32-WROOM-32
+from machine import Timer
 
 
 class GameTimer:
-    def __init__(self, countdown):
-        self.countdown = countdown
-        if countdown:
-            self._init_countdown_timer()
+    def __init__(self, driver, time_limit=None):
+        self.driver = driver
+        self.time_limit = time_limit
+        if time_limit:
+            self.init_countdown_timer()
         else:
-            self._init_normal_timer()
+            self.init_normal_timer()
 
 
-    def _init_countdown_timer(self):
-        pass
+    def init_countdown_timer(self):
+        self.game_over = False
+        self.seconds = self.time_limit
+        self.callback = self.count_down
 
 
-    def _init_normal_timer(self):
+    def init_normal_timer(self):
         self.seconds = 0
-        self.disp = self.encoder(self.seconds)
+        self.callback = self.count_up
 
 
-    def encoder(self):
+    def count_down(self, _):
+        self.seconds -= 1
+        if self.seconds == 0:
+            self.game_over = True
+            self.stop()
+        self.show()
+
+
+    def count_up(self, _):
+        self.seconds += 1
+        self.show()
+    
+    
+    def show(self):
         minute = self.seconds // 60
         second = self.seconds % 60
-        return "{:0>2}{:0>2}".format(minute, second)
+        self.driver.chars("{:0>2}{:0>2}".format(minute, second))
+
+
+    def start(self):
+        self.timer = Timer(2)
+        self.timer.init(mode=Timer.PERIODIC, period=1000, callback=self.callback)
+        self.driver.segmode("7")
+        self.show()
+
+    def stop(self):
+        self.timer.deinit()
+        self.driver.segmode("8")
     
+
     def get_seconds_used(self):
-        if self.countdown:
-            return 
+        if self.time_limit:
+            return (self.time_limit - self.seconds)
         else:
             return self.seconds
-    
-        
-    
-    
