@@ -20,7 +20,6 @@ def is_edge_crashed(snake_body):
     return False
        
 
-
 def place_apple(apple, snake_body, screen_driver):
     if randint(1,10) == 1:
         coord = apple.place(snake_body)

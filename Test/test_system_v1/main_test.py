@@ -4,7 +4,7 @@
 
 from system_peripheral import Peripheral
 from system_pages import Pages
-import system_functions
+import system_functions as funcs
 
 
 from game_timer import GameTimer
@@ -28,8 +28,12 @@ if __name__ == "__main__":
     p.buttons.start(100)
     """
     
+    """
     g = GameTimer(p.timer, 10)
     g.start()
+    """
+    
+    # funcs.roll_led_tubes(p.scorer, "PIXEL SnAKE   ")
     
     
     

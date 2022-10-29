@@ -1,5 +1,8 @@
 import system_functions as funcs
 import system_icons as icons
+import game_covers as covers
+
+from game_pixelsnake_run import run as pixelsnake_run
 
 
 class SettingPages:
@@ -82,20 +85,37 @@ class SettingPages:
 class GamePages:
     def game_intro(self):
         self._button(right=self.setting_intro,
-                     ok=self.game_select)
+                     ok=self.game_run)
         self._disp(screen_upside=icons.monster(),
                    screen_downside=icons.indicator(right=True),
                    timer="PLAy",
                    scorer="GAME")
 
 
-    def game_select(self):
-        pass
+    def game_run(self):
+        self._button(up=,
+                     down=,
+                     left=,
+                     right=,
+                     ok=self.game_selected[1],
+                     back=self.game_intro)
+        self._disp(screen_upside=self.game_selected[2](),
+                   screen_downside=,
+                   timer="PLAy",
+                   scorer=self.game_selected[3][:4])
+        funcs.roll_led_tubes(self.perl.scorer, self.game_selected[3])
 
 
 class Pages(SettingPages, GamePages):
     def __init__(self, perl):
         self.perl = perl
+        self.game_list = (
+            ("Pixel Snake",
+             pixelsnake_run,
+             covers.pixel_snake,
+             "PIXEL SnAKE   "),
+            )
+        self.game_selected = self.game_list[0]
         self.game_intro()
 
 
