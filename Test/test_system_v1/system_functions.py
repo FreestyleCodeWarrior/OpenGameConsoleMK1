@@ -2,7 +2,8 @@ from time import sleep_ms
 from random import randint
 from machine import Timer
 
-import system_configurator as config
+import system_configurator as sys_config
+import game_configurator as game_config
 
 
 def flip_screen(screen, rows, cs):
@@ -40,7 +41,7 @@ def roll_led_tubes(driver=None, characters=None, start=True):
 
 
 def init_perl_state(perl):
-    data = config.read_perl_config()
+    data = sys_config.read_perl_config()
     perl.screen.intensity(2, data["intensity"]["screen"])
     perl.timer.intensity(2, data["intensity"]["timer"])
     perl.scorer.intensity(2, data["intensity"]["scorer"])
@@ -48,17 +49,23 @@ def init_perl_state(perl):
 
 
 def save_perl_state(perl):
-    config.write_perl_config(perl)
+    sys_config.write_perl_config(perl)
     flip_led_tubes(perl.timer, "SAUE")
     flip_led_tubes(perl.scorer, "SUCC")
 
 
 def restore_perl_state(perl):
-    config.write_perl_config(perl, restore=True)
+    sys_config.write_perl_config(perl, restore=True)
     init_perl_state(perl)
     flip_led_tubes(perl.timer, "SEt ")
     flip_led_tubes(perl.scorer, "dEF ")
-    
+
+
+def clear_game_data(game_name):
+    game_config.write_game_config(game_name, game_config.default_game_config())
+    flip_led_tubes(perl.timer, "CLr ")
+    flip_led_tubes(perl.scorer, "SUCC")
+
 
 def update_buzzer(perl, mute):
     perl.buzzer.mute = mute

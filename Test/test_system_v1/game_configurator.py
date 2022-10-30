@@ -18,7 +18,7 @@ def read_game_config(game):
     try:
         file = open(get_filename(game), "r")
     except:
-        write_game_config(game, restore=True)
+        write_game_config(game, default_game_config())
         return default_game_config()
     else:
         data = load(file)
@@ -26,8 +26,6 @@ def read_game_config(game):
         return data
 
 
-def write_game_config(game, data=None, restore=False):
-    if restore:
-        data = default_game_config()
+def write_game_config(game, data):
     with open(get_filename(game), "w") as file:
         dump(data, file)

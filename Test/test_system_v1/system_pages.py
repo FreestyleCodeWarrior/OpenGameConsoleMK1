@@ -7,7 +7,7 @@ from game_pixelsnake_run import run as pixelsnake_run
 
 class SettingPages:
     def setting_intro(self):
-        self._button(left=self.game_intro,
+        self._button(left=self.game_run,
                      ok=self.setting_intensity)
         self._disp(screen_upside=icons.tool(),
                    screen_downside=icons.indicator(left=True),
@@ -83,27 +83,58 @@ class SettingPages:
 
 
 class GamePages:
-    def game_intro(self):
-        self._button(right=self.setting_intro,
-                     ok=self.game_run)
-        self._disp(screen_upside=icons.monster(),
-                   screen_downside=icons.indicator(right=True),
-                   timer="PLAy",
-                   scorer="GAME")
-
-
     def game_run(self):
+        if self.game_list.index(self.game_selected) == 0:
+            l_ind = False
+        else:
+            l_ind = True
+        
         self._button(up=,
-                     down=,
-                     left=,
-                     right=,
-                     ok=self.game_selected[1],
-                     back=self.game_intro)
+                     down=self.game_clear_data,
+                     left=(self.game_select, -1),
+                     right=(self.game_select, 1),
+                     ok=self.game_selected[1])
         self._disp(screen_upside=self.game_selected[2](),
-                   screen_downside=,
+                   screen_downside=self.icons.indicator(up=True, down=True, left=l_ind, right=True),
                    timer="PLAy",
                    scorer=self.game_selected[3][:4])
         funcs.roll_led_tubes(self.perl.scorer, self.game_selected[3])
+    
+    
+    def game_select(self, dirc):
+        if self.game_list.index(self.game_selected) == 0 and dirc == -1:
+            pass
+        elif self.game_list.index(self.game_selected) == len(self.game_list) - 1 and dirc == 1:
+            self.setting_intro()
+        else:
+            game_index = self.game_list.index(self.game_selected)
+            self.game_selected = self.game_list[game_index + dirc]
+            self.game_run()
+    
+    
+    def game_clear_data(self):
+        funcs.roll_led_tubes(start=False)
+        self._button(up=self.game_run,
+                     ok=(funcs.clear_game_data, self.game_selected[0]),
+                     back=self.game_intro)
+        self._disp(screen_upside=icons.dustbin(),
+                   screen_downside=icons.indicator(up=True),
+                   timer="CLr ",
+                   scorer="dAtA")
+    
+    
+    def game_records(self):
+        funcs.roll_led_tubes(start=False)
+        self._button(up=,
+                     down=self.game_run,
+                     ok=)
+        self._disp(screen_upside=icons.histogram(),
+                   screen_downside=icons.indicator(up=True, down=True),
+                   timer="SEE ",
+                   scorer="rECS")
+    
+    
+
 
 
 class Pages(SettingPages, GamePages):
@@ -116,7 +147,7 @@ class Pages(SettingPages, GamePages):
              "PIXEL SnAKE   "),
             )
         self.game_selected = self.game_list[0]
-        self.game_intro()
+        self.game_run()
 
 
     def _button(self, up=None, down=None, left=None, right=None, ok=None, back=None):
