@@ -7,6 +7,7 @@ from game_pixelsnake_run import run as pixelsnake_run
 
 class SettingPages:
     def setting_intro(self):
+        funcs.roll_led_tubes(start=False)
         self._button(left=self.game_run,
                      ok=self.setting_intensity)
         self._disp(screen_upside=icons.tool(),
@@ -85,17 +86,17 @@ class SettingPages:
 class GamePages:
     def game_run(self):
         if self.game_list.index(self.game_selected) == 0:
-            l_ind = False
+            ind_left = False
         else:
-            l_ind = True
+            ind_left = True
         
-        self._button(up=,
+        self._button(up=self.game_records_intro,
                      down=self.game_clear_data,
-                     left=(self.game_select, -1),
-                     right=(self.game_select, 1),
+                     left=(self.game_select, (-1,)),
+                     right=(self.game_select, (1,)),
                      ok=self.game_selected[1])
         self._disp(screen_upside=self.game_selected[2](),
-                   screen_downside=self.icons.indicator(up=True, down=True, left=l_ind, right=True),
+                   screen_downside=icons.indicator(up=True, down=True, left=ind_left, right=True),
                    timer="PLAy",
                    scorer=self.game_selected[3][:4])
         funcs.roll_led_tubes(self.perl.scorer, self.game_selected[3])
@@ -115,26 +116,67 @@ class GamePages:
     def game_clear_data(self):
         funcs.roll_led_tubes(start=False)
         self._button(up=self.game_run,
-                     ok=(funcs.clear_game_data, self.game_selected[0]),
-                     back=self.game_intro)
+                     ok=(funcs.clear_game_data, (self.perl, self.game_selected[0])),
+                     back=self.game_run)
         self._disp(screen_upside=icons.dustbin(),
                    screen_downside=icons.indicator(up=True),
                    timer="CLr ",
                    scorer="dAtA")
     
     
-    def game_records(self):
+    def game_records_intro(self):
         funcs.roll_led_tubes(start=False)
-        self._button(up=,
+        self._button(up=None,
                      down=self.game_run,
-                     ok=)
+                     ok=(self.game_records_view, ("enter",)))
         self._disp(screen_upside=icons.histogram(),
                    screen_downside=icons.indicator(up=True, down=True),
                    timer="SEE ",
                    scorer="rECS")
     
     
+    def game_records_view(self, i):
+        if i == "enter":
+            self.game_records = funcs.get_game_data(self.game_selected[0], "score records")
+            self.perl.timer.segmode("7")
+            i = 0
+        elif i == "quit":
+            del self.game_records
+            self.perl.timer.segmode("8")
+            self.game_records_intro()
+            return None
+        
 
+        if not self.game_records:
+            s_up = icons.numbers(i)
+            s_down = icons.empty()
+            timer = "no  "
+            scorer = "rECS"
+            b_up = b_down = None
+            self.perl.timer.segmode("8")
+        else:
+            ind_up = ind_down = True
+            b_up = (self.game_records_view, (i-1,))
+            b_down = (self.game_records_view, (i+1,))
+            if i == 0:
+                ind_up = None
+                b_up = None
+            if i == len(self.game_records) - 1:
+                ind_down = None
+                b_down = None
+            s_up = icons.numbers(i+1)
+            s_down = icons.indicator(up=ind_up, down=ind_down)
+            timer = self.game_records[i][0]
+            scorer = self.game_records[i][1]
+            
+        self._button(up=b_up,
+                     down=b_down,
+                     back=(self.game_records_view, ("quit",)))
+        self._disp(screen_upside=s_up,
+                   screen_downside=s_down,
+                   timer=timer,
+                   scorer=scorer)
+    
 
 
 class Pages(SettingPages, GamePages):

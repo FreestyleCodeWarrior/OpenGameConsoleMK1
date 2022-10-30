@@ -14,5 +14,9 @@ class Scorer:
         else:
             self.score += 1
     
+    
+    def encode(self):
+        return "{:0>4}".format(self.score)
+    
     def show():
-        driver.chars("{:0>4}".format(self.score))
+        driver.chars(self.encode())

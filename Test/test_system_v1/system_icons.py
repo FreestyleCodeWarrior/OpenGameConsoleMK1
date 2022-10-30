@@ -78,7 +78,7 @@ def disk():
 def dustbin():
     return (0b00011000,
             0b11111111,
-            0b01000000,
+            0b00000000,
             0b10100101,
             0b10100101,
             0b10100101,
@@ -90,11 +90,11 @@ def histogram():
     return (0b00000000,
             0b00011000,
             0b00011000,
-            0b00011110,
-            0b00011110,
-            0b01111110,
-            0b01111110,
-            0b01111110)
+            0b00011011,
+            0b00011011,
+            0b11011011,
+            0b11011011,
+            0b11011011)
 
 
 def fill():
@@ -146,5 +146,5 @@ def numbers(nums):
     nums = "{:0>2}".format(nums)
     dispinfo = []
     for x in range(8):
-        icon.append(eval("0b0{}0{}".format(encoder[nums[0]][x], encoder[nums[1]][x])))
+        dispinfo.append(eval("0b0{}0{}".format(encoder[nums[0]][x], encoder[nums[1]][x])))
     return dispinfo

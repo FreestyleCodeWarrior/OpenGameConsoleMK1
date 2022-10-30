@@ -39,7 +39,6 @@ def roll_led_tubes(driver=None, characters=None, start=True):
         Timer(2).deinit()
         
 
-
 def init_perl_state(perl):
     data = sys_config.read_perl_config()
     perl.screen.intensity(2, data["intensity"]["screen"])
@@ -61,10 +60,18 @@ def restore_perl_state(perl):
     flip_led_tubes(perl.scorer, "dEF ")
 
 
-def clear_game_data(game_name):
-    game_config.write_game_config(game_name, game_config.default_game_config())
+def clear_game_data(perl, game_name):
+    game_config.write_game_data(game_name, game_config.default_game_data())
     flip_led_tubes(perl.timer, "CLr ")
     flip_led_tubes(perl.scorer, "SUCC")
+
+
+def get_game_data(game_name, key):
+    data = game_config.read_game_data(game_name)
+    if isinstance(key, str):
+        return data[key]
+    elif isinstance(key, tuple):
+        return tuple((data[k] for k in key))
 
 
 def update_buzzer(perl, mute):

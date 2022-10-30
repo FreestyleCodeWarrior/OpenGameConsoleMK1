@@ -35,10 +35,14 @@ class GameTimer:
         self.show()
     
     
+    def encode(self, seconds):
+        minute = seconds // 60
+        second = seconds % 60
+        return "{:0>2}{:0>2}".format(minute, second)
+    
+    
     def show(self):
-        minute = self.seconds // 60
-        second = self.seconds % 60
-        self.driver.chars("{:0>2}{:0>2}".format(minute, second))
+        self.driver.chars(self.encode(self.seconds))
 
 
     def start(self):
