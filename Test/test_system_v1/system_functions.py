@@ -74,6 +74,24 @@ def get_game_data(game_name, key):
         return tuple((data[k] for k in key))
 
 
+def config_game_data(game_name, key, value):
+    data = game_config.read_game_data(game_name)
+    data[key] = value
+    game_config.write_game_data(game_name, data)
+
+
+def update_game_timer(perl, game_name, seconds):
+    if not seconds:
+        config_game_data(game_name, "time limit", 0)
+        config_game_data(game_name, "countdown", False)
+        flip_led_tubes(perl.timer, "SEt ")
+        flip_led_tubes(perl.scorer, "dEF ")
+    else:
+        config_game_data(game_name, "time limit", seconds)
+        flip_led_tubes(perl.timer, "SAUE")
+        flip_led_tubes(perl.scorer, "SUCC")
+
+
 def update_buzzer(perl, mute):
     perl.buzzer.mute = mute
     if not mute:

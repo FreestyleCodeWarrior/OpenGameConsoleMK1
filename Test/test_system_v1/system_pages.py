@@ -94,29 +94,32 @@ class GamePages:
                      down=self.game_clear_data,
                      left=(self.game_select, (-1,)),
                      right=(self.game_select, (1,)),
-                     ok=self.game_selected[1])
-        self._disp(screen_upside=self.game_selected[2](),
+                     ok=self.game_entry)
+        self._disp(screen_upside=self.game_cover(),
                    screen_downside=icons.indicator(up=True, down=True, left=ind_left, right=True),
                    timer="PLAy",
-                   scorer=self.game_selected[3][:4])
-        funcs.roll_led_tubes(self.perl.scorer, self.game_selected[3])
+                   scorer=self.game_rolling_text[:4])
+        funcs.roll_led_tubes(self.perl.scorer, self.game_rolling_text)
     
     
     def game_select(self, dirc):
-        if self.game_list.index(self.game_selected) == 0 and dirc == -1:
+        if self.game_index == 0 and dirc == -1:
             pass
-        elif self.game_list.index(self.game_selected) == len(self.game_list) - 1 and dirc == 1:
+        elif self.game_index == len(self.game_list) - 1 and dirc == 1:
             self.setting_intro()
         else:
-            game_index = self.game_list.index(self.game_selected)
-            self.game_selected = self.game_list[game_index + dirc]
+            self.game_index += dirc
+            self.game_name = self.game_list[0][0]
+            self.game_entry = self.game_list[0][1]
+            self.game_cover = self.game_list[0][2]
+            self.game_rolling_text = self.game_list[0][3]
             self.game_run()
     
     
     def game_clear_data(self):
         funcs.roll_led_tubes(start=False)
         self._button(up=self.game_run,
-                     ok=(funcs.clear_game_data, (self.perl, self.game_selected[0])),
+                     ok=(funcs.clear_game_data, (self.perl, self.game_name)),
                      back=self.game_run)
         self._disp(screen_upside=icons.dustbin(),
                    screen_downside=icons.indicator(up=True),
@@ -126,7 +129,7 @@ class GamePages:
     
     def game_records_intro(self):
         funcs.roll_led_tubes(start=False)
-        self._button(up=None,
+        self._button(up=self.game_timer_intro,
                      down=self.game_run,
                      ok=(self.game_records_view, ("enter",)))
         self._disp(screen_upside=icons.histogram(),
@@ -137,23 +140,19 @@ class GamePages:
     
     def game_records_view(self, i):
         if i == "enter":
-            self.game_records = funcs.get_game_data(self.game_selected[0], "score records")
-            self.perl.timer.segmode("7")
+            self.game_records = funcs.get_game_data(self.game_name, "score records")
             i = 0
         elif i == "quit":
             del self.game_records
-            self.perl.timer.segmode("8")
             self.game_records_intro()
             return None
         
-
         if not self.game_records:
             s_up = icons.numbers(i)
             s_down = icons.empty()
             timer = "no  "
             scorer = "rECS"
             b_up = b_down = None
-            self.perl.timer.segmode("8")
         else:
             ind_up = ind_down = True
             b_up = (self.game_records_view, (i-1,))
@@ -176,7 +175,99 @@ class GamePages:
                    screen_downside=s_down,
                    timer=timer,
                    scorer=scorer)
+        
+        if i == "quit":
+            self.perl.timer.segmode("8")
+        elif i == "enter" and self.game_records:
+            self.perl.timer.segmode("7")
+            
     
+    
+    def game_timer_intro(self):
+        self._button(down=self.game_records_intro,
+                     ok=self.game_timer_switch)
+        self._disp(screen_upside=icons.timer(),
+                   screen_downside=icons.indicator(down=True)
+                   timer="SEt ",
+                   scorer="TMr ")
+    
+    
+    def game_timer_switch(self, state=None):
+        if isinstance(state, bool):
+            funcs.config_game_data(self.game_name, "countdown", state)
+        scorer_info = "On  " if funcs.get_game_data(self.game_name, "countdown") else "OFF "
+        
+        self._button(up=(self.game_timer_switch, (True,)),
+                     down=(self.game_timer_switch, (False,)),
+                     right=(self.game_timer_set, ("min", 0, "entry")),
+                     back=self.game_timer_intro)
+        self._disp(screen_downside=icons.indicator(up=True, down=True, right=True),
+                   timer="TMr ",
+                   scorer=scorer_info)
+            
+
+    def game_timer_set(self, scale, dirc, mode=None):
+        timer_info = scorer_info = None
+        if mode == "entry":
+            time = funcs.get_game_data(self.game_name, "time limit")
+            self.min = time // 60
+            self.sec = time % 60
+            self.scale = scale
+            timer_info = "{:0>2}{:0>2}".format(self.min, self.sec)
+        elif "quit" in mode:
+            if "save" in mode:
+                self.game_timer_save()
+                return None
+            elif "switch" in mode:
+                self.game_timer_switch()
+            elif "intro" in mode:
+                self.game_timer_intro()
+            del self.min
+            del self.sec
+            del self.scale
+            return None
+        
+        if scale != self.scale or mode == "entry":
+            self.scale = scale
+            if scale == "min":
+                scorer_info = "MIn "
+                button_left = (self.game_timer_set, (None, None, "quit switch"))
+                button_right = (self.game_timer_set, ("sec", 0))
+            elif scale == "sec":
+                scorer_info = "SEc "
+                button_left = (self.game_timer_set, ("min", 0))
+                button_right = (self.game_timer_set, (None, None, "quit save"))
+        
+        if scale == "min":
+            self.min += dirc
+        elif scale == "sec":
+            self.sec += dirc
+        self.perl.timer.chars("{:0>2}{:0>2}".format(self.min, self.sec))
+
+        self._button(up=(self.game_timer_set, (scale, 1)),
+                     down=(self.game_timer_set, (scale, -1)),
+                     left=button_left,
+                     right=button_right,
+                     ok=(funcs.update_game_timer, (self.perl, self.game_name, self.min*60+self.sec)),
+                     back=(self.game_timer_set, (None, None, "quit intro")))
+        self._disp(screen_downside=icons.indicator(up=True, down=True, left=True, right=True),
+                   timer=timer_info,
+                   scorer=scorer_info)
+        
+        if mode == "entry":
+            self.perl.timer.segmode("7")
+        elif "quit" in mode:
+            self.perl.timer.segmode("8")
+    
+    
+    def game_timer_save(self):
+        self._button(up=(funcs.update_game_timer, (self.perl, self.game_name, self.min*60+self.sec)),
+                     down=(funcs.update_game_timer, (self.perl, self.game_name, None)),
+                     left=(self.game_timer_set, ("sec", 0, "entry")),
+                     back=(self.game_timer_set, (None, None, "quit intro")))
+        self._disp(screen_downside=icons.indicator(up=True,down=True,left=True),
+                   timer="SAUE",
+                   scorer="CHnG")
 
 
 class Pages(SettingPages, GamePages):
@@ -188,8 +279,9 @@ class Pages(SettingPages, GamePages):
              covers.pixel_snake,
              "PIXEL SnAKE   "),
             )
-        self.game_selected = self.game_list[0]
-        self.game_run()
+        self.game_index = 0
+        self.game_select(0)
+        
 
 
     def _button(self, up=None, down=None, left=None, right=None, ok=None, back=None):

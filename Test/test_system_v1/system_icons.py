@@ -97,6 +97,17 @@ def histogram():
             0b11011011)
 
 
+def timer():
+    return (0b00011000,
+            0b01000100,
+            0b00100110,
+            0b10011001,
+            0b10011001,
+            0b01000010,
+            0b01100110,
+            0b00011000)
+
+
 def fill():
     return tuple(0b11111111 for _ in range(8))
 
