@@ -85,7 +85,7 @@ class SettingPages:
 
 class GamePages:
     def game_run(self):
-        if self.game_list.index(self.game_selected) == 0:
+        if self.game_index == 0:
             ind_left = False
         else:
             ind_left = True
@@ -119,8 +119,7 @@ class GamePages:
     def game_clear_data(self):
         funcs.roll_led_tubes(start=False)
         self._button(up=self.game_run,
-                     ok=(funcs.clear_game_data, (self.perl, self.game_name)),
-                     back=self.game_run)
+                     ok=(funcs.clear_game_data, (self.perl, self.game_name)))
         self._disp(screen_upside=icons.dustbin(),
                    screen_downside=icons.indicator(up=True),
                    timer="CLr ",
@@ -145,6 +144,7 @@ class GamePages:
         elif i == "quit":
             del self.game_records
             self.game_records_intro()
+            self.perl.timer.segmode("8")
             return None
         
         if not self.game_records:
@@ -176,9 +176,7 @@ class GamePages:
                    timer=timer,
                    scorer=scorer)
         
-        if i == "quit":
-            self.perl.timer.segmode("8")
-        elif i == "enter" and self.game_records:
+        if self.game_records:
             self.perl.timer.segmode("7")
             
     
@@ -187,9 +185,9 @@ class GamePages:
         self._button(down=self.game_records_intro,
                      ok=self.game_timer_switch)
         self._disp(screen_upside=icons.timer(),
-                   screen_downside=icons.indicator(down=True)
+                   screen_downside=icons.indicator(down=True),
                    timer="SEt ",
-                   scorer="TMr ")
+                   scorer="tMr ")
     
     
     def game_timer_switch(self, state=None):
@@ -202,26 +200,29 @@ class GamePages:
                      right=(self.game_timer_set, ("min", 0, "entry")),
                      back=self.game_timer_intro)
         self._disp(screen_downside=icons.indicator(up=True, down=True, right=True),
-                   timer="TMr ",
+                   timer="tMr ",
                    scorer=scorer_info)
             
 
     def game_timer_set(self, scale, dirc, mode=None):
-        timer_info = scorer_info = None
+        timer_info = scorer_info = screen_down_info = None
         if mode == "entry":
             time = funcs.get_game_data(self.game_name, "time limit")
             self.min = time // 60
             self.sec = time % 60
             self.scale = scale
             timer_info = "{:0>2}{:0>2}".format(self.min, self.sec)
-        elif "quit" in mode:
+            screen_down_info = icons.indicator(up=True, down=True, left=True, right=True)
+        elif mode != None and "quit" in mode:
             if "save" in mode:
                 self.game_timer_save()
+                self.perl.timer.segmode("8")
                 return None
             elif "switch" in mode:
                 self.game_timer_switch()
             elif "intro" in mode:
                 self.game_timer_intro()
+            self.perl.timer.segmode("8")
             del self.min
             del self.sec
             del self.scale
@@ -229,20 +230,21 @@ class GamePages:
         
         if scale != self.scale or mode == "entry":
             self.scale = scale
-            if scale == "min":
-                scorer_info = "MIn "
-                button_left = (self.game_timer_set, (None, None, "quit switch"))
-                button_right = (self.game_timer_set, ("sec", 0))
-            elif scale == "sec":
-                scorer_info = "SEc "
-                button_left = (self.game_timer_set, ("min", 0))
-                button_right = (self.game_timer_set, (None, None, "quit save"))
-        
+            scorer_info = scale[:2].upper() + scale[-1] + " "
+                
         if scale == "min":
-            self.min += dirc
+            button_left = (self.game_timer_set, (None, None, "quit switch"))
+            button_right = (self.game_timer_set, ("sec", 0))
+            if (dirc > 0 and self.min < 99) or (dirc < 0 and self.min > 0):
+                self.min += dirc
         elif scale == "sec":
-            self.sec += dirc
-        self.perl.timer.chars("{:0>2}{:0>2}".format(self.min, self.sec))
+            button_left = (self.game_timer_set, ("min", 0))
+            button_right = (self.game_timer_set, (None, None, "quit save"))
+            if (dirc > 0 and self.sec < 99) or (dirc < 0 and self.sec > 0):
+                self.sec += dirc
+        
+        if mode != "entry":
+            self.perl.timer.chars("{:0>2}{:0>2}".format(self.min, self.sec))
 
         self._button(up=(self.game_timer_set, (scale, 1)),
                      down=(self.game_timer_set, (scale, -1)),
@@ -250,14 +252,12 @@ class GamePages:
                      right=button_right,
                      ok=(funcs.update_game_timer, (self.perl, self.game_name, self.min*60+self.sec)),
                      back=(self.game_timer_set, (None, None, "quit intro")))
-        self._disp(screen_downside=icons.indicator(up=True, down=True, left=True, right=True),
+        self._disp(screen_downside=screen_down_info,
                    timer=timer_info,
                    scorer=scorer_info)
         
         if mode == "entry":
             self.perl.timer.segmode("7")
-        elif "quit" in mode:
-            self.perl.timer.segmode("8")
     
     
     def game_timer_save(self):

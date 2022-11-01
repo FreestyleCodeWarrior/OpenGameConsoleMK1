@@ -61,7 +61,7 @@ def restore_perl_state(perl):
 
 
 def clear_game_data(perl, game_name):
-    game_config.write_game_data(game_name, game_config.default_game_data())
+    config_game_data(game_name, "score records", [])
     flip_led_tubes(perl.timer, "CLr ")
     flip_led_tubes(perl.scorer, "SUCC")
 
