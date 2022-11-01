@@ -5,6 +5,8 @@ class GameTimer:
     def __init__(self, driver, time_limit=None):
         self.driver = driver
         self.time_limit = time_limit
+        self.game_over = False
+        self.game_pause = False
         if time_limit:
             self.init_countdown_timer()
         else:
@@ -12,7 +14,6 @@ class GameTimer:
 
 
     def init_countdown_timer(self):
-        self.game_over = False
         self.seconds = self.time_limit
         self.callback = self.count_down
 
@@ -54,6 +55,15 @@ class GameTimer:
     def stop(self):
         self.timer.deinit()
         self.driver.segmode("8")
+    
+    
+    def interrupt(self, mode):
+        if mode == "quit":
+            self.game_over = True
+        elif mode == "pause":
+            self.game_pause = True
+        elif mode == "resume":
+            self.game_pause = False
     
 
     def get_seconds_used(self):
