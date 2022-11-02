@@ -94,7 +94,7 @@ class GamePages:
                      down=self.game_clear_data,
                      left=(self.game_select, (-1,)),
                      right=(self.game_select, (1,)),
-                     ok=self.game_entry)
+                     ok=(self.game_entry, (self.perl, self)))
         self._disp(screen_upside=self.game_cover(),
                    screen_downside=icons.indicator(up=True, down=True, left=ind_left, right=True),
                    timer="PLAy",
@@ -109,10 +109,10 @@ class GamePages:
             self.setting_intro()
         else:
             self.game_index += dirc
-            self.game_name = self.game_list[0][0]
-            self.game_entry = self.game_list[0][1]
-            self.game_cover = self.game_list[0][2]
-            self.game_rolling_text = self.game_list[0][3]
+            self.game_name = self.game_list[self.game_index][0]
+            self.game_entry = self.game_list[self.game_index][1]
+            self.game_cover = self.game_list[self.game_index][2]
+            self.game_rolling_text = self.game_list[self.game_index][3]
             self.game_run()
     
     

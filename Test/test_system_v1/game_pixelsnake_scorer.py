@@ -5,7 +5,7 @@ from time import ticks_diff
 class Scorer:
     def __init__(self, driver):
         self.score = 0
-        self.show()
+        self.encode()
 
 
     def add(apple_time_tick):

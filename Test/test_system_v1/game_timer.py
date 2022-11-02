@@ -55,16 +55,18 @@ class GameTimer:
 
     def stop(self):
         self.timer.deinit()
-        self.driver.segmode("8")
     
     
     def interrupt(self, mode):
         if mode == "quit":
             self.game_over = True
+            self.stop()
         elif mode == "pause":
             self.game_pause = True
+            self.stop()
         elif mode == "resume":
             self.game_pause = False
+            self.start()
     
 
     def get_seconds_used(self):
