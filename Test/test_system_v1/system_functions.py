@@ -13,6 +13,14 @@ def flip_screen(screen, rows, cs):
             sleep_ms(20)
 
 
+def blink_screen(perl, time, on_duration, off_duration):
+    for _ in range(time):
+        perl.screen.switch(0)
+        sleep_ms(off_duration)
+        perl.screen.switch(1)
+        sleep_ms(on_duration)
+
+
 def flip_led_tubes(driver, characters):
     for _ in range(10):
         driver.segments(tuple(randint(1,255) for _ in range(4)))
@@ -37,7 +45,7 @@ def roll_led_tubes(driver=None, characters=None, start=True):
         Timer(2).init(mode=Timer.PERIODIC, period=150, callback=show)
     else:
         Timer(2).deinit()
-        
+
 
 def init_perl_state(perl):
     data = sys_config.read_perl_config()

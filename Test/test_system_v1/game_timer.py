@@ -11,6 +11,7 @@ class GameTimer:
             self.init_countdown_timer()
         else:
             self.init_normal_timer()
+        self.encode(self.seconds)
 
 
     def init_countdown_timer(self):
@@ -37,13 +38,12 @@ class GameTimer:
     
     
     def encode(self, seconds):
-        minute = seconds // 60
-        second = seconds % 60
-        return "{:0>2}{:0>2}".format(minute, second)
+        self.encoded_seconds = "{:0>2}{:0>2}".format(seconds // 60, seconds % 60)
     
     
     def show(self):
-        self.driver.chars(self.encode(self.seconds))
+        self.encode(self.seconds)
+        self.driver.chars(self.encoded_seconds)
 
 
     def start(self):
@@ -51,6 +51,7 @@ class GameTimer:
         self.timer.init(mode=Timer.PERIODIC, period=1000, callback=self.callback)
         self.driver.segmode("7")
         self.show()
+
 
     def stop(self):
         self.timer.deinit()

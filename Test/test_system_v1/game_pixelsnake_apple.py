@@ -2,7 +2,7 @@ from random import randint
 from time import ticks_ms
 
 
-class Apples:
+class Apple:
     def __init__(self):
         self.coords = {}
     
@@ -16,4 +16,4 @@ class Apples:
 
 
     def remove(self, coord):
-        del self.coords(coord)
+        del self.coords[coord]

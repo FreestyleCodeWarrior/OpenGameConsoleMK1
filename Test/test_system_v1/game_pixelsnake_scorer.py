@@ -6,7 +6,8 @@ class Scorer:
     def __init__(self, driver):
         self.score = 0
         self.show()
-    
+
+
     def add(apple_time_tick):
         score = round(-0.01*ticks_diff(ticks_ms(), apple_time_tick)+100)
         if score > 0:
@@ -16,7 +17,9 @@ class Scorer:
     
     
     def encode(self):
-        return "{:0>4}".format(self.score)
-    
+        self.encoded_score = "{:0>4}".format(self.score)
+
+
     def show():
-        driver.chars(self.encode())
+        self.encode()
+        driver.chars(self.encoded_score)

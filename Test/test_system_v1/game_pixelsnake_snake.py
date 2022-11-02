@@ -23,7 +23,7 @@ class Snake:
                 self.body.insert(0, (self.body[0][0]-1, self.body[0][1]))
     
     
-    def move(self, apple):
+    def move_head(self):
         if self.dirc == "u":
             self.body.append((self.body[-1][0], self.body[-1][1]-1))
         elif self.dirc == "d":
@@ -32,10 +32,11 @@ class Snake:
             self.body.append((self.body[-1][0]-1, self.body[-1][1]))
         elif self.dirc == "r":
             self.body.append((self.body[-1][0]+1, self.body[-1][1]))
-        if apple:
-            return None
-        else:
-            return self.body.pop(0)
+        return self.body[-1]
+
+
+    def move_tail(self):
+        return self.body.pop(0)
 
 
     def accelerate(self, state):
