@@ -4,6 +4,7 @@ from time import ticks_diff
 
 class Scorer:
     def __init__(self, driver):
+        self.driver = driver
         self.score = 0
         self.encode()
 
@@ -20,6 +21,6 @@ class Scorer:
         self.encoded_score = "{:0>4}".format(self.score)
 
 
-    def show():
+    def show(self):
         self.encode()
-        driver.chars(self.encoded_score)
+        self.driver.chars(self.encoded_score)

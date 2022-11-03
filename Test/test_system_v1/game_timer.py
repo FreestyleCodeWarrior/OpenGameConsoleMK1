@@ -71,6 +71,7 @@ class GameTimer:
 
     def get_seconds_used(self):
         if self.time_limit:
-            return (self.time_limit - self.seconds)
+            self.encode(self.time_limit - self.seconds)
         else:
-            return self.seconds
+            self.encode(self.seocnds)
+        return self.encoded_seconds

@@ -6,7 +6,6 @@ class Snake:
     def __init__(self):
         self.body = []
         self.dirc = choice(["u", "d", "l", "r"])
-        self.ac_state = False
         self._init_body()
 
 
@@ -37,10 +36,6 @@ class Snake:
 
     def move_tail(self):
         return self.body.pop(0)
-
-
-    def accelerate(self, state):
-        self.ac_state = state
     
     
     def turn(self, dirc):
