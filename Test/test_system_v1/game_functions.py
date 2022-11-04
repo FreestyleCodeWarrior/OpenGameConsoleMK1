@@ -37,49 +37,45 @@ def notice(perl, mode, game_flow=None):
         flip_led_tubes(perl.scorer, game_flow.game_scorer.encoded_score)
         
         
-def bind_button_events(perl, mode, game_flow=None):
+def bind_button_events(perl, game_flow, pages, mode):
     perl.buttons.handlers = {}
     if mode == "start":
         for event in game_flow.button_events:
             perl.buttons.assign(event[0], event[1], event[2])
-        perl.buttons.assign("back", pause_game, (perl, game_flow))
+        perl.buttons.assign("back", stop_game, (perl, game_flow, pages, "pause"))
     elif mode == "pause":
-        perl.buttons.assign("ok", resume_game, (perl, game_flow))
-        perl.buttons.assign("back", quit_game, (game_flow,))
+        perl.buttons.assign("ok", start_game, (perl, game_flow, pages, "resume"))
+        perl.buttons.assign("back", quit_game, (game_flow, pages))
     elif mode == "over":
         perl.buttons.assign("ok", notice, (perl, "resume", game_flow))
-        perl.buttons.assign("back", quit_game, (game_flow,))
+        perl.buttons.assign("back", quit_game, (game_flow, pages))
 
 
-def start_game(perl, game_flow):
-    roll_led_tubes(start=False)
-    notice(perl, "start")
+def start_game(perl, game_flow, pages, mode="start"):
+    if mode == "start":
+        roll_led_tubes(start=False)
+    notice(perl, mode, game_flow)
     game_flow.game_timer.start()
     game_flow.game_scorer.show()
-    bind_button_events(perl, "start", game_flow)
+    bind_button_events(perl, game_flow, pages, mode)
+    game_flow.clock.init(
+        mode=game_flow.clock.PERIODIC,
+        period=game_flow.clock_period,
+        callback=game_flow.refresh)
 
 
-def pause_game(perl, game_flow):
-    game_flow.game_timer.interrupt("pause")
-    notice(perl, "pause")
-    bind_button_events(perl, "pause", game_flow)
+def stop_game(perl, game_flow, pages, mode):
+    game_flow.clock.deinit()
+    game_flow.game_timer.stop()
+    notice(perl, mode)
+    bind_button_events(perl, game_flow, pages, mode)
 
 
-def resume_game(perl, game_flow):
-    game_flow.game_timer.interrupt("resume")
-    notice(perl, "resume", game_flow)
-    bind_button_events(perl, "start", game_flow)
-    game_flow.begin(resume=True)
-
-
-def over_game(perl, game_flow):
-    game_flow.game_timer.interrupt("pause")
-    notice(perl, "over")
-    bind_button_events(perl, "over", game_flow)
-
-
-def quit_game(game_flow):
-    game_flow.game_timer.interrupt("quit")
+def quit_game(game_flow, pages):
+    save_game_record(pages.game_list[pages.game_index][0],
+                     game_flow.game_timer,
+                     game_flow.game_scorer)
+    pages.game_select(0)
 
 
 def set_game_timer(GameTimer, perl, game_name):
@@ -91,4 +87,6 @@ def save_game_record(game_name, game_timer, game_scorer):
     records = get_game_data(game_name, "score records")
     records.append([game_timer.get_seconds_used(), game_scorer.encoded_score])
     records.sort(key=lambda item: item[1], reverse=True)
+    if len(records) > 99:
+        records.pop()
     config_game_data(game_name, "score records", records)

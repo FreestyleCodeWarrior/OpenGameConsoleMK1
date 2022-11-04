@@ -8,8 +8,9 @@ from game_timer import GameTimer
 
 
 class GameFlow:
-    def __init__(self, perl):
+    def __init__(self, perl, pages):
         self.perl = perl
+        self.pages = pages
         
         self.game_scorer = Scorer(perl.scorer)
         self.game_timer = set_game_timer(GameTimer, perl, "Pixel Snake")
@@ -22,31 +23,13 @@ class GameFlow:
                            ("down", self.snake.turn, ("d",)),
                            ("left", self.snake.turn, ("l",)),
                            ("right", self.snake.turn, ("r",)))
-        
 
-    def begin(self, resume=False):
-        if not resume:
-            start_game(self.perl, self.button_events, self.game_timer, self.game_scorer)
-        self.timer.init(mode=Timer.PERIODIC, period=self.clock_period, callback=self.refresh)
-        
 
     def refresh(self, _):
-        if self.game_timer.game_over:
-            self.clock.deinit()
-            self.end()
-            return None
-        elif self.game_timer.game_pause:
-            self.clock.deinit()
-            return None
-        if update_snake(self.perl, self):
-            over_game(self)
-        place_apple(self.perl, self.apple, self.snake)
-        perl.screen.refresh()
-
-
-    def end(self, _):
-        save_game_record("Pixel Snake", self.game_timer, self.game_scorer)
-        pages.game_select(0)
+        if update_snake(self.perl, self.snake, self.apple):
+            stop_game(self.perl, self, self.pages, "over")
+        place_apple(self.perl, self.snake, self.apple)
+        self.perl.screen.refresh()
 
 
 

@@ -26,7 +26,7 @@ def is_edge_crashed(snake):
     return False
        
 
-def place_apple(perl, apple):
+def place_apple(perl, snake, apple):
     if randint(1,10) == 1:
         coord = apple.place(snake.body)
         perl.screen.pixels("1", (coord,))
