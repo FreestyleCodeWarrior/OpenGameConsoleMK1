@@ -2,8 +2,8 @@ import system_functions as funcs
 import system_icons as icons
 import game_covers as covers
 
-from game_pixelsnake_run import run as pixelsnake_run
-
+from game_pixelsnake_flow import GameFlow as GameFlowPixelsnake
+from game_functions import start_game
 
 class SettingPages:
     def setting_intro(self):
@@ -94,7 +94,7 @@ class GamePages:
                      down=self.game_clear_data,
                      left=(self.game_select, (-1,)),
                      right=(self.game_select, (1,)),
-                     ok=(self.game_entry, (self.perl, self)))
+                     ok=(start_game, (self.perl, self.game_flow(self.perl, self), self)))
         self._disp(screen_upside=self.game_cover(),
                    screen_downside=icons.indicator(up=True, down=True, left=ind_left, right=True),
                    timer="PLAy",
@@ -110,7 +110,7 @@ class GamePages:
         else:
             self.game_index += dirc
             self.game_name = self.game_list[self.game_index][0]
-            self.game_entry = self.game_list[self.game_index][1]
+            self.game_flow = self.game_list[self.game_index][1]
             self.game_cover = self.game_list[self.game_index][2]
             self.game_rolling_text = self.game_list[self.game_index][3]
             self.game_run()
@@ -275,7 +275,7 @@ class Pages(SettingPages, GamePages):
         self.perl = perl
         self.game_list = (
             ("Pixel Snake",
-             pixelsnake_run,
+             GameFlowPixelsnake,
              covers.pixel_snake,
              "PIXEL SnAKE   "),
             )
