@@ -10,28 +10,11 @@ from time import sleep
 
 
 if __name__ == "__main__":
-    p = Peripheral()
-    p.screen.test(1)
-    p.timer.chars("8888")
-    p.scorer.chars("8888")
-    #p.buzzer.buzz(100)
-    sleep(0.1)
-    p.screen.test(0)
-    p.timer.chars("    ")
-    p.scorer.chars("    ")
+    perl = Peripheral()
+    pages = Pages(perl)
+    funcs.init_perl_state(perl)
+    perl.buttons.start(100)
     
-    
-    funcs.init_perl_state(p)
-    pages = Pages(p)
-    p.buttons.start(100)
-    
-    
-    """
-    g = GameTimer(p.timer, 10)
-    g.start()
-    """
-    
-    # funcs.roll_led_tubes(p.scorer, "PIXEL SnAKE   ")
     
     
     

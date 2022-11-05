@@ -31,6 +31,7 @@ class SettingPages:
                      down=(self.perl.screen.intensity, (0,)),
                      right=self.setting_intensity_timer,
                      back=self.setting_intensity)
+        self.perl.buzzer.buzz(50)
         self._disp(screen_upside=icons.fill(),
                    screen_downside=icons.indicator(up=True, down=True, right=True),
                    timer="    ",
@@ -43,6 +44,7 @@ class SettingPages:
                      right=self.setting_intensity_scorer,
                      left=self.setting_intensity_screen,
                      back=self.setting_intensity)
+        self.perl.buzzer.buzz(50)
         self._disp(screen_upside=icons.empty(),
                    screen_downside=icons.indicator(up=True, down=True, left=True, right=True),
                    timer="8888",
@@ -54,6 +56,7 @@ class SettingPages:
                      down=(self.perl.scorer.intensity, (0,)),
                      left=self.setting_intensity_timer,
                      back=self.setting_intensity)
+        self.perl.buzzer.buzz(50)
         self._disp(screen_upside=icons.empty(),
                    screen_downside=icons.indicator(up=True, down=True, left=True),
                    timer="    ",
@@ -194,6 +197,7 @@ class GamePages:
     def game_timer_switch(self, state=None):
         if isinstance(state, bool):
             funcs.config_game_data(self.game_name, "countdown", state)
+            self.perl.buzzer.buzz(50)
         scorer_info = "On  " if funcs.get_game_data(self.game_name, "countdown") else "OFF "
         
         self._button(up=(self.game_timer_switch, (True,)),

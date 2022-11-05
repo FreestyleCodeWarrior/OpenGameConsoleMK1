@@ -46,7 +46,6 @@ class HardwareID:
     
     def _buzzer(self):
         self.buzzer_pin = 0
-        self.buzzer_timer_id = 1
 
 
 class Peripheral(HardwareID):
@@ -97,5 +96,4 @@ class Peripheral(HardwareID):
 
     def _init_buzzer(self, Buzzer, Timer, Pin):
         pin = Pin(self.buzzer_pin)
-        timer = Timer(self.buzzer_timer_id)
-        self.buzzer = Buzzer(pin, timer)
+        self.buzzer = Buzzer(pin)

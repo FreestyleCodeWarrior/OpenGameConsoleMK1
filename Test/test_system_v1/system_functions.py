@@ -13,11 +13,15 @@ def flip_screen(screen, rows, cs):
             sleep_ms(20)
 
 
-def blink_screen(perl, time, on_duration, off_duration):
+def blink_screen(perl, time, on_duration, off_duration, sound=True):
     for _ in range(time):
         perl.screen.switch(0)
+        if sound:
+            perl.buzzer.on()
         sleep_ms(off_duration)
         perl.screen.switch(1)
+        if sound:
+            perl.buzzer.off()
         sleep_ms(on_duration)
 
 
@@ -57,6 +61,7 @@ def init_perl_state(perl):
 
 def save_perl_state(perl):
     sys_config.write_perl_config(perl)
+    perl.buzzer.buzz(50)
     flip_led_tubes(perl.timer, "SAUE")
     flip_led_tubes(perl.scorer, "SUCC")
 
@@ -64,12 +69,14 @@ def save_perl_state(perl):
 def restore_perl_state(perl):
     sys_config.write_perl_config(perl, restore=True)
     init_perl_state(perl)
+    perl.buzzer.buzz(50)
     flip_led_tubes(perl.timer, "SEt ")
     flip_led_tubes(perl.scorer, "dEF ")
 
 
 def clear_game_data(perl, game_name):
     config_game_data(game_name, "score records", [])
+    perl.buzzer.buzz(50)
     flip_led_tubes(perl.timer, "CLr ")
     flip_led_tubes(perl.scorer, "SUCC")
 
@@ -92,16 +99,19 @@ def update_game_timer(perl, game_name, seconds):
     if not seconds:
         config_game_data(game_name, "time limit", 0)
         config_game_data(game_name, "countdown", False)
+        perl.buzzer.buzz(50)
         flip_led_tubes(perl.timer, "SEt ")
         flip_led_tubes(perl.scorer, "dEF ")
     else:
         config_game_data(game_name, "time limit", seconds)
+        perl.buzzer.buzz(50)
         flip_led_tubes(perl.timer, "SAUE")
         flip_led_tubes(perl.scorer, "SUCC")
 
 
 def update_buzzer(perl, mute):
     perl.buzzer.mute = mute
+    perl.buzzer.buzz(50)
     if not mute:
         flip_led_tubes(perl.scorer, "On  ")
     elif mute:

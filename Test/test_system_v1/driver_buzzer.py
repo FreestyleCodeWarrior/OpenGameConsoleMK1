@@ -1,7 +1,9 @@
+from time import sleep_ms
+
+
 class Buzzer:
-    def __init__(self, pin, timer):
+    def __init__(self, pin):
         self.pin = pin # the machine.Pin object connected to the buzzer module
-        self.timer = timer # machine.Timer object used to turn the buzzer off
         self._init()
 
 
@@ -9,11 +11,6 @@ class Buzzer:
         self.mute = False # initially turn off the mute mode
         self.pin.init(mode=self.pin.OUT) # set the pin as an OUT pin
         self.off() # initially turn off the buzzer
-
-
-    def _settimer(self, period):
-        # initialize the timer for turning off the buzzer after a certain period of time 
-        self.timer.init(mode=self.timer.ONE_SHOT, period=period, callback=self.off)
 
 
     def on(self):
@@ -30,6 +27,6 @@ class Buzzer:
     def buzz(self, duration):
         # buzz for a certain duration
         # duration (ms)
-        if not self.mute:
-            self.pin.off()
-            self._settimer(duration)
+        self.on()
+        sleep_ms(duration)
+        self.off()

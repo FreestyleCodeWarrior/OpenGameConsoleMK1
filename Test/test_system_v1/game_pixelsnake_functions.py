@@ -27,6 +27,7 @@ def update_snake(perl, snake, apple, game_scorer):
     perl.screen.pixels("1", (snake.body[-1],))
     if snake.body[-1] in apple.coords:
         game_scorer.add(apple.coords[snake.body[-1]])
+        perl.buzzer.buzz(50)
         game_scorer.show()
         apple.remove(snake.body[-1])
     else:
