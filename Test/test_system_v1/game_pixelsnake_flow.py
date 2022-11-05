@@ -14,23 +14,37 @@ class GameFlow:
         
         self.game_scorer = Scorer(perl.scorer)
         self.game_timer = set_game_timer(GameTimer, perl, "Pixel Snake")
-        self.snake = get_snake(Snake, perl)
+        self.snake = Snake()
         self.apple = Apple()
         self.clock = Timer(3)
         
+        self.init_disp_info = self.snake.body
         self.clock_period = 300
         self.button_events = (("up", self.snake.turn, ("u",)),
                            ("down", self.snake.turn, ("d",)),
                            ("left", self.snake.turn, ("l",)),
                            ("right", self.snake.turn, ("r",)))
-
-
-    def refresh(self, _):
-        if update_snake(self.perl, self.snake, self.apple):
+        
+        if self.game_timer.time_limit:
+            self.refresh = self.refresh_countdown
+        else:
+            self.refresh = self.refresh_normal
+    
+    
+    def refresh_normal(self, _):
+        if update_snake(self.perl, self.snake, self.apple, self.game_scorer):
             stop_game(self.perl, self, self.pages, "over")
         place_apple(self.perl, self.snake, self.apple)
         self.perl.screen.refresh()
 
+
+    def refresh_countdown(self, _):
+        if update_snake(self.perl, self.snake, self.apple, self.game_scorer):
+            stop_game(self.perl, self, self.pages, "over")
+        place_apple(self.perl, self.snake, self.apple)
+        self.perl.screen.refresh()
+        if self.game_timer.game_over:
+            stop_game(self.perl, self, self.pages, "over")
 
 
 

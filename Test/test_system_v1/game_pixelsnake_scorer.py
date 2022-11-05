@@ -9,7 +9,7 @@ class Scorer:
         self.encode()
 
 
-    def add(apple_time_tick):
+    def add(self, apple_time_tick):
         score = round(-0.01*ticks_diff(ticks_ms(), apple_time_tick)+100)
         if score > 0:
             self.score += score

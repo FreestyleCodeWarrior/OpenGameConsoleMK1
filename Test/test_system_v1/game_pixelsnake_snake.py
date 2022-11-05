@@ -43,5 +43,4 @@ class Snake:
            (dirc == "d" and self.dirc != "u") or \
            (dirc == "l" and self.dirc != "r") or \
            (dirc == "r" and self.dirc != "l"):
-            self.dir = dir
-        
+            self.dirc = dirc

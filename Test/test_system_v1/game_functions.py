@@ -1,6 +1,8 @@
 from time import sleep_ms
+from system_icons import empty
 from system_functions import roll_led_tubes
 from system_functions import flip_led_tubes
+from system_functions import flip_screen
 from system_functions import blink_screen
 from system_functions import get_game_data
 from system_functions import config_game_data
@@ -8,6 +10,10 @@ from system_functions import config_game_data
 
 def notice(perl, mode, game_flow=None):
     if mode == "start":
+        flip_screen(perl.screen, empty(), 0)
+        flip_screen(perl.screen, empty(), 1)
+        perl.screen.pixels("1", game_flow.init_disp_info)
+        perl.screen.refresh()
         blink_screen(perl, 3, 50, 100)
         flip_led_tubes(perl.timer, "3333")
         flip_led_tubes(perl.scorer, "3333")
@@ -54,6 +60,7 @@ def bind_button_events(perl, game_flow, pages, mode):
 def start_game(perl, game_flow, pages, mode="start"):
     if mode == "start":
         roll_led_tubes(start=False)
+        perl.screen.clearbuffer()
     notice(perl, mode, game_flow)
     game_flow.game_timer.start()
     game_flow.game_scorer.show()

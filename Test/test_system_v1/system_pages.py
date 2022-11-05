@@ -100,6 +100,7 @@ class GamePages:
                    timer="PLAy",
                    scorer=self.game_rolling_text[:4])
         funcs.roll_led_tubes(self.perl.scorer, self.game_rolling_text)
+        self.perl.timer.segmode("8")
     
     
     def game_select(self, dirc):

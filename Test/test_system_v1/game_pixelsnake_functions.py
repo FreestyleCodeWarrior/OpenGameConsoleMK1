@@ -1,16 +1,4 @@
-from system_functions import flip_screen
-from game_functions import over_game
-from system_icons import empty
 from random import randint
-
-
-def get_snake(Snake, perl):
-    snake = Snake()
-    flip_screen(perl.screen, empty(), 0)
-    flip_screen(perl.screen, empty(), 1)
-    perl.screen.pixels("1", snake.body)
-    perl.screen.refresh()
-    return snake
 
 
 def is_body_crashed(snake):
@@ -32,7 +20,7 @@ def place_apple(perl, snake, apple):
         perl.screen.pixels("1", (coord,))
 
 
-def update_snake(perl, snake, apple):
+def update_snake(perl, snake, apple, game_scorer):
     snake.move_head()
     if is_body_crashed(snake) or is_edge_crashed(snake):
         return True

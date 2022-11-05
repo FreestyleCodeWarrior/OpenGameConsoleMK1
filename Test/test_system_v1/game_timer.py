@@ -61,5 +61,5 @@ class GameTimer:
         if self.time_limit:
             self.encode(self.time_limit - self.seconds)
         else:
-            self.encode(self.seocnds)
+            self.encode(self.seconds)
         return self.encoded_seconds
