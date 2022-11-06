@@ -14,8 +14,3 @@ if __name__ == "__main__":
     pages = Pages(perl)
     funcs.init_perl_state(perl)
     perl.buttons.start(100)
-    
-    
-    
-    
-    

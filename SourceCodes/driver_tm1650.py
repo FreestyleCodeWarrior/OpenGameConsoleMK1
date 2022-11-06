@@ -1,7 +1,3 @@
-# Hardware driver of numeric LED segments with tm1650
-# MicroPython version: v1.19.1 on 2022-06-18
-# Espressif ESP32-WROOM-32
-
 from micropython import const
 
 # addresses of digit display unit
@@ -40,12 +36,42 @@ ENCODE = {
     "7":7,
     "8":127,
     "9":111,
+    "A":119,
+    "b":124,
+    "C":57,
+    "c":88,
+    "d":94,
+    "E":121,
+    "F":113,
+    "G":61,
+    "H":118,
+    "h":116,
+    "I":6,
+    "J":30,
+    "K":117,
+    "L":56,
+    "M":85,
+    "n":84,
+    "O":63,
+    "o":92,
+    "P":115,
+    "q":103,
+    "r":80,
+    "S":109,
+    "t":120,
+    "U":62,
+    "u":28,
+    "v":28,
+    "W":42,
+    "X":118,
+    "y":110,
+    "Z":91
     }
 
 class LedDigitalTube:
     def __init__(self, SoftI2C, scl, sda):
         self.si2c = SoftI2C(scl, sda, freq=10000000) # machine.SoftI2C object for communication
-        self._intensity = INT[0]
+        self._intensity = 0
         self._segmode = SEG8
         self._state = POWERON
         self._set()        
@@ -60,16 +86,16 @@ class LedDigitalTube:
     def _set(self):
         # set intensity, segment display mode and work state
         self._write(SETTING,\
-        eval("0b0{}{}{}{}00{}".format(*self._intensity, self._segmode, self._state)))
+        eval("0b0{}{}{}{}00{}".format(*INT[self._intensity], self._segmode, self._state)))
     
-    def digits(self, nums):
+    def chars(self, c):
         # accept a string 4 characters long and display
         for pos in range(4):
-            self._write(DIG[pos], ENCODE[nums[pos]])
+            self._write(DIG[pos], ENCODE[c[pos]])
         
-    def digit(self, pos, num):
+    def char(self, pos, c):
         # display one digit and its position then display
-        self._write(DIG[pos], ENCODE[num])
+        self._write(DIG[pos], ENCODE[c])
     
     def segments(self, data):
         # accept display data in a list and display
@@ -89,9 +115,14 @@ class LedDigitalTube:
         for pos in range(4):
             self._write(DIG[pos], 0)
     
-    def intensity(self, i):
+    def intensity(self, mode, value=None):
         # adjust the intensity within 8 levels
-        self._intensity = INT[i]
+        if mode == 1 and self._intensity < 7:
+            self._intensity += 1
+        elif mode == 0 and self._intensity > 0:
+            self._intensity -= 1
+        elif mode == 2:
+            self._intensity = value
         self._set()
     
     def segmode(self, mode):

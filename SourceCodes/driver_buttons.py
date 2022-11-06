@@ -1,7 +1,3 @@
-# Hardware driver for buttons
-# MicroPython version: v1.19.1 on 2022-06-18
-# Espressif ESP32-WROOM-32
-
 class Buttons:
     def __init__(self, timer, **buttons):
         self.timer = timer # time.Timer
@@ -27,12 +23,14 @@ class Buttons:
             period=self.timer_period,
             callback=self.timer_callback)
     
+    
     def _callback(self, arg):
         # periodically called by the timer
         # detect pin state and call corresponding handler if at high level
-        for button in self.buttons:
+        for button, handler in self.handlers.items():
             if self.buttons[button].value() == 1:
-                self.handlers[button][0](*self.handlers[button][1])
+                handler[0](*handler[1])
+            
     
     def start(self, period):
         # start the timer for checking pins
