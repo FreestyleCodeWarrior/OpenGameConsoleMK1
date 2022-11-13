@@ -10,9 +10,11 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 * 4-digit 8-segment LEDs powered by TM1650 without colon * 1
 * Buzzer controlled by MOSFET activated by low level * 1
 * 4-pin button * 6
+* Voltage regulator module with 5V output * 1
+* Battery capable of providing high enough voltage * 1
 
 ###  Connection of Modules
-* **8x8 Led matrix powered by MAX7219 - upside**
+* **8x8 LED matrix - upside**
 
 | Module | ESP32 GPIO |
 | ------------- | ------------- |
@@ -20,7 +22,7 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 | CLK | 14 |
 | CS | 32 |
 
-* **8x8 Led matrix powered by MAX7219 - downside**
+* **8x8 LED matrix - downside**
 
 | Module | ESP32 GPIO |
 | ------------- | ------------- |
@@ -28,27 +30,27 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 | CLK | 14 |
 | CS | 33 |
 
-* **4-digit 8-segment LEDs powered by TM1650 with colon - upside**
+* **4-digit 8-segment LEDs with colon - upside**
 
 | Module | ESP32 GPIO |
 | ------------- | ------------- |
 | SCL | 18 |
 | SDA | 19 |
 
-* **4-digit 8-segment LEDs powered by TM1650 without colon - downside**
+* **4-digit 8-segment LEDs without colon - downside**
 
 | Module | ESP32 GPIO |
 | ------------- | ------------- |
 | SCL | 25 |
 | SDA | 26 |
 
-* **Buzzer controlled by MOSFET activated by low level**
+* **Buzzer**
 
 | Module | ESP32 GPIO |
 | ------------- | ------------- |
 | Trigger | 25 |
 
-* **4-pin button**
+* **Buttons**
 
 | Module | ESP32 GPIO |
 | ------------- | ------------- |
@@ -58,6 +60,21 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 | RIGHT  | 22 |
 | OK  | 23 |
 | BACK  | 27 |
+
+* **Battery**
+
+| Battery | Voltage Regulator |
+| ------------- | ------------- |
+| +  | IN |
+| -  | GND |
+
+* **Voltage Regulator**
+
+| Module | Other peripheral |
+| ------------- | ------------- |
+| OUT | VCC |
+| GND | GND |
+
 
 ### Upload of Firmware
 1. Connect the esp32 to your PC
