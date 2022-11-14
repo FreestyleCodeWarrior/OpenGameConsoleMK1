@@ -6,8 +6,6 @@ from system_peripheral import Peripheral
 from system_pages import Pages
 import system_functions as funcs
 
-from time import sleep
-
 
 if __name__ == "__main__":
     perl = Peripheral()
