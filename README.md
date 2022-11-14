@@ -48,7 +48,7 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 
 | Module | ESP32 GPIO |
 | ------------- | ------------- |
-| Trigger | 25 |
+| Trigger | 0 |
 
 * **Buttons**
 
