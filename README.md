@@ -1,9 +1,12 @@
 # OpenGameConsoleMK1
 OpenGameConsoleMK1 is a simple open-sources handle game console based on micropython and esp32 with features of storing and editing configuration information and adjustable hardware properties (intensity and sound).
 
+![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/connected.jpg?raw=true)
+
 ## Setup
 
 ### List of Modules
+![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/modules.jpg?raw=true)
 * Espressif ESP32-WROOM-32 * 1
 * 8x8 Led matrix powered by MAX7219 * 2
 * 4-digit 8-segment LEDs powered by TM1650 with colon * 1
@@ -83,8 +86,9 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 4. Remove cables from your PC then power on the MCU and other peripherals.
 
 ## Operation Instructions
-[image of buttons]
 ### Input
+![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/input.jpg?raw=true)
+
 Buttons shown above is the only hardware for inputing commands to the MCU.
 Six buttons are assigned the following commands (some example functions are listed):
 * **up/down**
@@ -108,9 +112,12 @@ Pause or quit game;
 ...
 
 ### Output
+![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/output.jpg?raw=true)
 * **16x8 LED matrix** - graphic display
 * **4-digit 8-segment LEDs with colon** - text and time display
 * **4-digit 8-segment LEDs without colon** - text and score display
 * **Buzzer** - sound output
 
 ### System Page Map
+![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/map_playgame.png?raw=true)
+![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/map_setconfiguration.png?raw=true)
