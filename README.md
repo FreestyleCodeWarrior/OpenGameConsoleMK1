@@ -6,7 +6,6 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 ## Setup
 
 ### List of Modules
-![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/modules.jpg?raw=true)
 * Espressif ESP32-WROOM-32 * 1
 * 8x8 Led matrix powered by MAX7219 * 2
 * 4-digit 8-segment LEDs powered by TM1650 with colon * 1
@@ -15,6 +14,7 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 * 4-pin button * 6
 * Voltage regulator module with 5V output * 1
 * Battery capable of providing high enough voltage * 1
+![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/modules.jpg?raw=true)
 
 ###  Connection of Modules
 * **8x8 LED matrix - upside**
