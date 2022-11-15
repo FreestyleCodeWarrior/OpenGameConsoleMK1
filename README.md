@@ -14,6 +14,7 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 * 4-pin button * 6
 * Voltage regulator module with 5V output * 1
 * Battery capable of providing high enough voltage * 1
+
 ![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/modules.jpg?raw=true)
 
 ###  Connection of Modules
