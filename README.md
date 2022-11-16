@@ -1,7 +1,7 @@
 # OpenGameConsoleMK1
 OpenGameConsoleMK1 is a simple open-sources handle game console based on micropython and esp32 with features of storing and editing configuration information and adjustable hardware properties (intensity and sound).
 
-![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/connected.jpg?raw=true)
+![](https://github.com/YikangLi2003/OpenGameConsoleMK1/blob/main/Show/finished.png?raw=true)
 
 ## Setup
 
@@ -16,6 +16,7 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 * Battery capable of providing high enough voltage * 1
 
 ![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/modules.jpg?raw=true)
+![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/connected.jpg?raw=true)
 
 ###  Connection of Modules
 * **8x8 LED matrix - upside**
