@@ -80,6 +80,7 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 | OUT | VCC |
 | GND | GND |
 
+![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/wiring.png?raw=true)
 
 ### Upload of Firmware
 1. Connect the esp32 to your PC
