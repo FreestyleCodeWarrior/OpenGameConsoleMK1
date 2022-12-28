@@ -94,6 +94,9 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 
 ![](https://github.com/YikangLi2003/OpenGameConsoleMK1/blob/main/Show/PCB.png?raw=true)
 
+### Get the PCB
+You can provide the gerber file ***OpenGameConsoleMK1/PrintedCircuitBoard/*** to your local PCB manufacture to get the PCBs.
+
 ## Operation Instructions
 ### Input
 ![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/input.jpg?raw=true)
