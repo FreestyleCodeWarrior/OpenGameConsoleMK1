@@ -84,15 +84,15 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 
 ![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/wiring.png?raw=true)
 
-## Setup with PCB
-
-![](https://github.com/YikangLi2003/OpenGameConsoleMK1/blob/main/Show/PCB.png?raw=true)
-
 ### Upload of Firmware
 1. Connect the esp32 to your PC
 2. open thonny, select corresponding micropython interpreter and detect COM ports to get connection with micropython shell of MCU
 3. Select all files in ***OpenGameConsoleMK1/Firmware/*** and upload to the root directory of the MCU
 4. Remove cables from your PC then power on the MCU and other peripherals.
+
+## Setup with PCB
+
+![](https://github.com/YikangLi2003/OpenGameConsoleMK1/blob/main/Show/PCB.png?raw=true)
 
 ## Operation Instructions
 ### Input
