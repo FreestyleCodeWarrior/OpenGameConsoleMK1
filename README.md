@@ -1,9 +1,10 @@
 # OpenGameConsoleMK1
-OpenGameConsoleMK1 is a simple open-sources handle game console based on micropython and esp32 with features of storing and editing configuration information and adjustable hardware properties (intensity and sound).
+OpenGameConsoleMK1 is a simple open-sources handle game console based on micropython and esp32 with features of storing and editing configuration information and adjustable hardware properties (intensity and sound). Now an integrated version with PCB is available.
 
+![](https://github.com/YikangLi2003/OpenGameConsoleMK1/blob/main/Show/integrated.jpg?raw=true)
 ![](https://github.com/YikangLi2003/OpenGameConsoleMK1/blob/main/Show/finished.png?raw=true)
 
-## Setup
+## Setup with Wires
 
 ### List of Modules
 * Espressif ESP32-WROOM-32 * 1
@@ -82,6 +83,10 @@ OpenGameConsoleMK1 is a simple open-sources handle game console based on micropy
 | GND | GND |
 
 ![](https://github.com/FreestyleCodeWarrior/OpenGameConsoleMK1/blob/main/Show/wiring.png?raw=true)
+
+## Setup with PCB
+
+![](https://github.com/YikangLi2003/OpenGameConsoleMK1/blob/main/Show/PCB.png?raw=true)
 
 ### Upload of Firmware
 1. Connect the esp32 to your PC
